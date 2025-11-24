@@ -1,0 +1,15 @@
+-r base.txt
+
+# Production server
+gunicorn>=21.2.0
+uvicorn[standard]>=0.24.0
+
+# Task queue
+celery>=5.3.0
+redis>=5.0.0
+
+# Monitoring (optional stubs)
+sentry-sdk>=1.38.0
+
+# Performance
+django-redis>=5.4.0

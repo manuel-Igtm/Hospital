@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hospital-native"
+version = "0.1.0"
+description = "High-performance C modules for hospital backend"
+authors = [{name = "Immanuel Njogu"}]
+license = {text = "Custom Commercial License"}
+requires-python = ">=3.12"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+]
+
+[tool.setuptools]
+packages = []
