@@ -31,11 +31,9 @@ include_directories(
     ${Python3_INCLUDE_DIRS}
 )
 
-# Source files for C libraries
+# Source files for C libraries (MVP: only cutils and hl7val)
 set(HL7VAL_SOURCES src/libhl7val.c)
 set(CUTILS_SOURCES src/libcutils.c)
-set(AUTHZ_SOURCES src/libauthz.c)
-set(BILL_SOURCES src/libbill.c)
 
 # Build shared libraries
 add_library(hl7val SHARED ${HL7VAL_SOURCES})
@@ -44,14 +42,8 @@ target_link_libraries(hl7val)
 add_library(cutils SHARED ${CUTILS_SOURCES})
 target_link_libraries(cutils OpenSSL::Crypto)
 
-add_library(authz SHARED ${AUTHZ_SOURCES})
-target_link_libraries(authz)
-
-add_library(bill SHARED ${BILL_SOURCES})
-target_link_libraries(bill)
-
 # Install libraries
-install(TARGETS hl7val cutils authz bill
+install(TARGETS hl7val cutils
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
