@@ -4,8 +4,10 @@ Pytest configuration and fixtures for Hospital Backend tests.
 Copyright (c) 2025, Immanuel Njogu. All rights reserved.
 """
 
-import pytest
 from rest_framework.test import APIClient
+
+import pytest
+
 from apps.users.models import User, UserRole
 
 
@@ -19,10 +21,10 @@ def api_client():
 def admin_user(db):
     """Create and return an admin user."""
     return User.objects.create_user(
-        email='admin@hospital.test',
-        password='AdminPass123!',
-        first_name='Admin',
-        last_name='User',
+        email="admin@hospital.test",
+        password="AdminPass123!",
+        first_name="Admin",
+        last_name="User",
         role=UserRole.ADMIN,
         is_staff=True,
     )
@@ -32,13 +34,13 @@ def admin_user(db):
 def doctor_user(db):
     """Create and return a doctor user."""
     return User.objects.create_user(
-        email='doctor@hospital.test',
-        password='DoctorPass123!',
-        first_name='John',
-        last_name='Doctor',
+        email="doctor@hospital.test",
+        password="DoctorPass123!",
+        first_name="John",
+        last_name="Doctor",
         role=UserRole.DOCTOR,
-        license_number='MD12345',
-        department='Internal Medicine',
+        license_number="MD12345",
+        department="Internal Medicine",
     )
 
 
@@ -46,13 +48,13 @@ def doctor_user(db):
 def nurse_user(db):
     """Create and return a nurse user."""
     return User.objects.create_user(
-        email='nurse@hospital.test',
-        password='NursePass123!',
-        first_name='Jane',
-        last_name='Nurse',
+        email="nurse@hospital.test",
+        password="NursePass123!",
+        first_name="Jane",
+        last_name="Nurse",
         role=UserRole.NURSE,
-        license_number='RN67890',
-        department='Emergency',
+        license_number="RN67890",
+        department="Emergency",
     )
 
 
@@ -60,12 +62,12 @@ def nurse_user(db):
 def lab_tech_user(db):
     """Create and return a lab technician user."""
     return User.objects.create_user(
-        email='labtech@hospital.test',
-        password='LabTechPass123!',
-        first_name='Lab',
-        last_name='Technician',
+        email="labtech@hospital.test",
+        password="LabTechPass123!",
+        first_name="Lab",
+        last_name="Technician",
         role=UserRole.LAB_TECH,
-        department='Laboratory',
+        department="Laboratory",
     )
 
 
@@ -73,10 +75,10 @@ def lab_tech_user(db):
 def receptionist_user(db):
     """Create and return a receptionist user."""
     return User.objects.create_user(
-        email='receptionist@hospital.test',
-        password='ReceptionPass123!',
-        first_name='Front',
-        last_name='Desk',
+        email="receptionist@hospital.test",
+        password="ReceptionPass123!",
+        first_name="Front",
+        last_name="Desk",
         role=UserRole.RECEPTIONIST,
     )
 

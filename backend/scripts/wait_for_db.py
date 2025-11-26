@@ -8,17 +8,19 @@ Useful for Docker Compose where Django might start before PostgreSQL is ready.
 import os
 import sys
 import time
+
 from django.db import connections
 from django.db.utils import OperationalError
 
+
 def wait_for_db():
     """Wait for database to become available."""
-    db_conn = connections['default']
+    db_conn = connections["default"]
     max_retries = 30
     retry_delay = 2
-    
+
     print("🔄 Waiting for database...")
-    
+
     for i in range(max_retries):
         try:
             db_conn.ensure_connection()
@@ -32,15 +34,17 @@ def wait_for_db():
                 print(f"❌ Database not available after {max_retries} attempts")
                 print(f"Error: {e}")
                 return False
-    
+
     return False
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     # Django setup
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.prod')
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.prod")
     import django
+
     django.setup()
-    
+
     # Wait for DB
     if not wait_for_db():
         sys.exit(1)

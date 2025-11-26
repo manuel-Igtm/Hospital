@@ -7,4 +7,4 @@ using libhl7val C module.
 Copyright (c) 2025, Immanuel Njogu. All rights reserved.
 """
 
-default_app_config = 'apps.lab_orders.apps.LabOrdersConfig'
+default_app_config = "apps.lab_orders.apps.LabOrdersConfig"

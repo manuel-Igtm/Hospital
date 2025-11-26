@@ -7,4 +7,4 @@ JWT authentication, and user management endpoints.
 Copyright (c) 2025, Immanuel Njogu. All rights reserved.
 """
 
-default_app_config = 'apps.users.apps.UsersConfig'
+default_app_config = "apps.users.apps.UsersConfig"
