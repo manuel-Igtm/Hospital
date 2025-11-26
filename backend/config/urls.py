@@ -42,8 +42,8 @@ urlpatterns = [
         # Patients
         path('', include('apps.patients.urls')),
         
-        # Lab Orders (Week 3)
-        # path('', include('apps.lab_orders.urls')),
+        # Lab Orders
+        path('lab/', include('apps.lab_orders.urls')),
     ])),
     
     # API Documentation
