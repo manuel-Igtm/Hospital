@@ -1,0 +1,129 @@
+# Hospital Backend - PostgreSQL StatefulSet
+# Copyright (c) 2025, Immanuel Njogu. All rights reserved.
+#
+# NOTE: For production, consider using managed PostgreSQL (AWS RDS, GCP Cloud SQL, Azure Database)
+# This is for development/testing purposes
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hospital-postgres
+  namespace: hospital
+  labels:
+    app: hospital
+    component: postgres
+spec:
+  serviceName: hospital-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hospital
+      component: postgres
+  template:
+    metadata:
+      labels:
+        app: hospital
+        component: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15-alpine
+          ports:
+            - containerPort: 5432
+              name: postgres
+          envFrom:
+            - secretRef:
+                name: postgres-secrets
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - hospital
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - hospital
+            initialDelaySeconds: 5
+            periodSeconds: 5
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 10Gi
+---
+# Redis Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hospital-redis
+  namespace: hospital
+  labels:
+    app: hospital
+    component: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hospital
+      component: redis
+  template:
+    metadata:
+      labels:
+        app: hospital
+        component: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          ports:
+            - containerPort: 6379
+              name: redis
+          command:
+            - redis-server
+            - --appendonly
+            - "yes"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+          livenessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+      volumes:
+        - name: redis-data
+          emptyDir: {}

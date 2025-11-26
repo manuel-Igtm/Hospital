@@ -1,0 +1,60 @@
+# Hospital Backend - Kubernetes Service
+# Copyright (c) 2025, Immanuel Njogu. All rights reserved.
+apiVersion: v1
+kind: Service
+metadata:
+  name: hospital-backend
+  namespace: hospital
+  labels:
+    app: hospital
+    component: backend
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+      protocol: TCP
+  selector:
+    app: hospital
+    component: backend
+---
+# PostgreSQL Service (if deploying in cluster)
+apiVersion: v1
+kind: Service
+metadata:
+  name: hospital-postgres
+  namespace: hospital
+  labels:
+    app: hospital
+    component: postgres
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+      protocol: TCP
+  selector:
+    app: hospital
+    component: postgres
+---
+# Redis Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: hospital-redis
+  namespace: hospital
+  labels:
+    app: hospital
+    component: redis
+spec:
+  type: ClusterIP
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: 6379
+      protocol: TCP
+  selector:
+    app: hospital
+    component: redis

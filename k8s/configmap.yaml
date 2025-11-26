@@ -1,0 +1,34 @@
+# Hospital Backend - Kubernetes ConfigMap
+# Copyright (c) 2025, Immanuel Njogu. All rights reserved.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hospital-config
+  namespace: hospital
+  labels:
+    app: hospital
+data:
+  DJANGO_SETTINGS_MODULE: "config.settings.prod"
+  DJANGO_DEBUG: "False"
+  DJANGO_ALLOWED_HOSTS: "hospital.example.com,localhost"
+  
+  # Database (use secrets for credentials)
+  DATABASE_HOST: "hospital-postgres"
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: "hospital"
+  
+  # Redis
+  REDIS_HOST: "hospital-redis"
+  REDIS_PORT: "6379"
+  REDIS_URL: "redis://hospital-redis:6379/0"
+  
+  # Celery
+  CELERY_BROKER_URL: "redis://hospital-redis:6379/0"
+  CELERY_RESULT_BACKEND: "redis://hospital-redis:6379/1"
+  
+  # JWT Settings
+  JWT_ACCESS_TOKEN_LIFETIME: "15"
+  JWT_REFRESH_TOKEN_LIFETIME: "10080"
+  
+  # Logging
+  LOG_LEVEL: "INFO"

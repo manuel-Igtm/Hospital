@@ -1,0 +1,9 @@
+# Hospital Backend - Kubernetes Namespace
+# Copyright (c) 2025, Immanuel Njogu. All rights reserved.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hospital
+  labels:
+    app: hospital
+    environment: production

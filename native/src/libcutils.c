@@ -1,7 +1,6 @@
 #include "libcutils.h"
 #include <openssl/evp.h>
 #include <openssl/rand.h>
-#include <openssl/sha.h>
 #include <openssl/err.h>
 #include <string.h>
 #include <stdio.h>
@@ -194,20 +193,22 @@ int cutils_sha256(const uint8_t *data, size_t data_len, uint8_t *output) {
         return CUTILS_ERR_NULL_INPUT;
     }
 
-    SHA256_CTX ctx;
-    if (SHA256_Init(&ctx) != 1) {
+    EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+    if (!ctx) {
         return CUTILS_ERR_CRYPTO;
     }
 
-    if (SHA256_Update(&ctx, data, data_len) != 1) {
-        return CUTILS_ERR_CRYPTO;
+    int ret = CUTILS_ERR_CRYPTO;
+    if (EVP_DigestInit_ex(ctx, EVP_sha256(), NULL) == 1 &&
+        EVP_DigestUpdate(ctx, data, data_len) == 1) {
+        unsigned int out_len = 0;
+        if (EVP_DigestFinal_ex(ctx, output, &out_len) == 1 && out_len == 32) {
+            ret = CUTILS_SUCCESS;
+        }
     }
 
-    if (SHA256_Final(output, &ctx) != 1) {
-        return CUTILS_ERR_CRYPTO;
-    }
-
-    return CUTILS_SUCCESS;
+    EVP_MD_CTX_free(ctx);
+    return ret;
 }
 
 uint64_t cutils_xxh3(const uint8_t *data, size_t data_len) {
