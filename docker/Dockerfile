@@ -24,9 +24,7 @@ COPY native/ /build/native/
 RUN cd /build/native && \
     mkdir build && cd build && \
     cmake -DCMAKE_BUILD_TYPE=Release .. && \
-    make && \
-    cd .. && \
-    python -m build
+    make
 
 # Copy Python requirements
 COPY backend/pyproject.toml /build/backend/
