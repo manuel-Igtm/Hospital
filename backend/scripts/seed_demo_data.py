@@ -31,13 +31,10 @@ django.setup()
 from django.contrib.auth import get_user_model
 from django.db import transaction
 
-User = get_user_model()
-
-# Import Patient model
+from apps.lab_orders.models import TestCategory, TestType
 from apps.patients.models import BloodType, Gender, Patient
 
-# Import Lab Orders models
-from apps.lab_orders.models import TestCategory, TestType
+User = get_user_model()
 
 # Demo users configuration
 DEMO_USERS = [
