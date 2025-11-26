@@ -36,6 +36,9 @@ User = get_user_model()
 # Import Patient model
 from apps.patients.models import BloodType, Gender, Patient
 
+# Import Lab Orders models
+from apps.lab_orders.models import TestCategory, TestType
+
 # Demo users configuration
 DEMO_USERS = [
     {
@@ -43,7 +46,7 @@ DEMO_USERS = [
         "password": "admin123!",
         "first_name": "System",
         "last_name": "Administrator",
-        "role": "admin",
+        "role": "ADMIN",
         "is_staff": True,
         "is_superuser": True,
     },
@@ -52,7 +55,7 @@ DEMO_USERS = [
         "password": "doctor123!",
         "first_name": "John",
         "last_name": "Smith",
-        "role": "doctor",
+        "role": "DOCTOR",
         "is_staff": False,
         "is_superuser": False,
     },
@@ -61,7 +64,7 @@ DEMO_USERS = [
         "password": "nurse123!",
         "first_name": "Jane",
         "last_name": "Doe",
-        "role": "nurse",
+        "role": "NURSE",
         "is_staff": False,
         "is_superuser": False,
     },
@@ -70,7 +73,7 @@ DEMO_USERS = [
         "password": "lab123!",
         "first_name": "Mike",
         "last_name": "Johnson",
-        "role": "lab_technician",
+        "role": "LAB_TECH",
         "is_staff": False,
         "is_superuser": False,
     },
@@ -260,6 +263,109 @@ def create_demo_patients() -> None:
     print(f"\nSummary: {created_count} created, {skipped_count} skipped")
 
 
+# Demo test types configuration
+DEMO_TEST_TYPES = [
+    {
+        "code": "CBC",
+        "name": "Complete Blood Count",
+        "description": "Measures red blood cells, white blood cells, hemoglobin, hematocrit, and platelets",
+        "category": TestCategory.HEMATOLOGY,
+        "loinc_code": "58410-2",
+        "specimen_type": "Blood",
+        "turnaround_hours": 4,
+    },
+    {
+        "code": "BMP",
+        "name": "Basic Metabolic Panel",
+        "description": "Measures glucose, calcium, electrolytes, and kidney function",
+        "category": TestCategory.CHEMISTRY,
+        "loinc_code": "51990-0",
+        "specimen_type": "Blood",
+        "turnaround_hours": 4,
+    },
+    {
+        "code": "CMP",
+        "name": "Comprehensive Metabolic Panel",
+        "description": "BMP plus liver function tests",
+        "category": TestCategory.CHEMISTRY,
+        "loinc_code": "24323-8",
+        "specimen_type": "Blood",
+        "turnaround_hours": 6,
+    },
+    {
+        "code": "LFT",
+        "name": "Liver Function Tests",
+        "description": "Measures liver enzymes and bilirubin",
+        "category": TestCategory.CHEMISTRY,
+        "loinc_code": "24325-3",
+        "specimen_type": "Blood",
+        "turnaround_hours": 6,
+    },
+    {
+        "code": "UA",
+        "name": "Urinalysis",
+        "description": "Analyzes urine for various substances and cells",
+        "category": TestCategory.URINALYSIS,
+        "loinc_code": "24356-8",
+        "specimen_type": "Urine",
+        "turnaround_hours": 2,
+    },
+    {
+        "code": "TSH",
+        "name": "Thyroid Stimulating Hormone",
+        "description": "Measures thyroid function",
+        "category": TestCategory.CHEMISTRY,
+        "loinc_code": "3016-3",
+        "specimen_type": "Blood",
+        "turnaround_hours": 24,
+    },
+    {
+        "code": "LIPID",
+        "name": "Lipid Panel",
+        "description": "Measures cholesterol and triglycerides",
+        "category": TestCategory.CHEMISTRY,
+        "loinc_code": "24331-1",
+        "specimen_type": "Blood",
+        "turnaround_hours": 6,
+    },
+    {
+        "code": "HBA1C",
+        "name": "Hemoglobin A1c",
+        "description": "Measures average blood sugar over 2-3 months",
+        "category": TestCategory.CHEMISTRY,
+        "loinc_code": "4548-4",
+        "specimen_type": "Blood",
+        "turnaround_hours": 24,
+    },
+]
+
+
+def create_demo_test_types() -> None:
+    """Create demo test types if they don't exist."""
+    print("\nCreating demo test types...")
+
+    created_count = 0
+    skipped_count = 0
+
+    with transaction.atomic():
+        for test_data in DEMO_TEST_TYPES:
+            code = test_data["code"]
+
+            test_type, created = TestType.objects.get_or_create(
+                code=code,
+                defaults=test_data,
+            )
+
+            if created:
+                print(f"  ✓ Created: {code} - {test_data['name']}")
+                created_count += 1
+            else:
+                print(f"  - Skipped (exists): {code}")
+                skipped_count += 1
+
+    print(f"\nSummary: {created_count} created, {skipped_count} skipped")
+
+
 if __name__ == "__main__":
     # Re-add passwords for credential display (they were popped during creation)
     DEMO_USERS[0]["password"] = "admin123!"
@@ -271,3 +377,4 @@ if __name__ == "__main__":
     print()
     create_demo_users()
     create_demo_patients()
+    create_demo_test_types()
