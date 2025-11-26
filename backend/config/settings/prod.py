@@ -72,9 +72,9 @@ DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="noreply@hospital.example
 # Sentry error tracking (optional)
 SENTRY_DSN = env("SENTRY_DSN", default=None)
 if SENTRY_DSN:
-    import sentry_sdk
-    from sentry_sdk.integrations.celery import CeleryIntegration
-    from sentry_sdk.integrations.django import DjangoIntegration
+    import sentry_sdk  # type: ignore[import-not-found]
+    from sentry_sdk.integrations.celery import CeleryIntegration  # type: ignore[import-not-found]
+    from sentry_sdk.integrations.django import DjangoIntegration  # type: ignore[import-not-found]
 
     sentry_sdk.init(
         dsn=SENTRY_DSN,

@@ -64,7 +64,7 @@ if settings.DEBUG:
 
     # Debug toolbar
     if "debug_toolbar" in settings.INSTALLED_APPS:
-        import debug_toolbar
+        import debug_toolbar  # type: ignore[import-not-found]
 
         urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
 

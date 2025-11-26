@@ -1,4 +1,4 @@
-from setuptools import setup, Extension
+from setuptools import setup, Extension  # type: ignore[import-not-found]
 import os
 import subprocess
 

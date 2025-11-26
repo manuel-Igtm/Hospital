@@ -16,9 +16,10 @@ logger = logging.getLogger(__name__)
 
 # Try to import C modules
 C_MODULES_AVAILABLE = False
+hospital_native = None  # type: ignore[assignment]
 try:
     if settings.HOSPITAL_SETTINGS.get("ENABLE_C_MODULES", False):
-        import hospital_native
+        import hospital_native  # type: ignore[import-not-found,no-redef]
 
         C_MODULES_AVAILABLE = True
         logger.info("✓ C modules loaded successfully")
