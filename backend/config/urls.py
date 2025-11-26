@@ -34,21 +34,16 @@ urlpatterns = [
     path('health/', health_check, name='health'),
     path('ping/', ping, name='ping'),
     
-    # API v1
+    # API v1 (MVP only: users, patients, lab_orders)
     path('api/v1/', include([
-        # Auth
-        path('auth/', include('apps.users.urls')),
+        # Auth & Users
+        path('', include('apps.users.urls')),
         
-        # Domain APIs
-        path('patients/', include('apps.patients.urls')),
-        path('appointments/', include('apps.appointments.urls')),
-        path('encounters/', include('apps.encounters.urls')),
-        path('orders/', include('apps.orders.urls')),
-        path('labs/', include('apps.labs.urls')),
-        path('medications/', include('apps.medications.urls')),
-        path('billing/', include('apps.billing.urls')),
-        path('insurance/', include('apps.insurance.urls')),
-        path('audit/', include('apps.audit.urls')),
+        # Patients
+        path('', include('apps.patients.urls')),
+        
+        # Lab Orders (Week 3)
+        # path('', include('apps.lab_orders.urls')),
     ])),
     
     # API Documentation

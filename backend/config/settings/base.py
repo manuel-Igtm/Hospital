@@ -52,18 +52,11 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_spectacular',
     
-    # Local apps
+    # Local apps (MVP only)
     'apps.core',
     'apps.users',
     'apps.patients',
-    'apps.appointments',
-    'apps.encounters',
-    'apps.orders',
-    'apps.labs',
-    'apps.medications',
-    'apps.billing',
-    'apps.insurance',
-    'apps.audit',
+    'apps.lab_orders',
 ]
 
 MIDDLEWARE = [
@@ -195,23 +188,16 @@ CORS_ALLOW_CREDENTIALS = True
 # Spectacular (OpenAPI) settings
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Hospital Backend API',
-    'DESCRIPTION': 'Enterprise-grade hospital management system API',
+    'DESCRIPTION': 'Enterprise-grade hospital management system API (MVP)',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'SCHEMA_PATH_PREFIX': '/api/v1/',
     'COMPONENT_SPLIT_REQUEST': True,
     'TAGS': [
         {'name': 'auth', 'description': 'Authentication and authorization'},
+        {'name': 'users', 'description': 'User management'},
         {'name': 'patients', 'description': 'Patient management'},
-        {'name': 'appointments', 'description': 'Appointment scheduling'},
-        {'name': 'encounters', 'description': 'Clinical encounters'},
-        {'name': 'orders', 'description': 'Order management'},
-        {'name': 'labs', 'description': 'Laboratory results'},
-        {'name': 'medications', 'description': 'Medication catalog'},
-        {'name': 'prescriptions', 'description': 'E-prescribing'},
-        {'name': 'billing', 'description': 'Billing and invoices'},
-        {'name': 'insurance', 'description': 'Insurance policies'},
-        {'name': 'audit', 'description': 'Audit logs'},
+        {'name': 'lab-orders', 'description': 'Laboratory orders and results'},
     ],
 }
 
