@@ -1,6 +1,7 @@
 #include "../include/libcutils.h"
 #include <stdio.h>
 #include <string.h>
+#undef NDEBUG  /* Ensure assert() is active even in release builds */
 #include <assert.h>
 
 void test_aes_gcm_encryption() {
