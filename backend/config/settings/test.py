@@ -7,31 +7,26 @@ from .base import *
 
 DEBUG = False
 
-# Use SQLite in-memory for faster tests
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ":memory:",
-        "ATOMIC_REQUESTS": True,
+# Use DATABASE_URL if provided (CI uses PostgreSQL), otherwise SQLite in-memory
+if env("DATABASE_URL", default=None):
+    DATABASES = {
+        "default": env.db("DATABASE_URL"),
     }
-}
+    DATABASES["default"]["ATOMIC_REQUESTS"] = True
+else:
+    # Fallback to SQLite for local development tests
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+            "ATOMIC_REQUESTS": True,
+        }
+    }
 
 # Password hashers - fast for testing
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.MD5PasswordHasher",
 ]
-
-
-# Disable migrations for faster tests
-class DisableMigrations:
-    def __contains__(self, item):
-        return True
-
-    def __getitem__(self, item):
-        return None
-
-
-MIGRATION_MODULES = DisableMigrations()
 
 # Email backend - memory for testing
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
