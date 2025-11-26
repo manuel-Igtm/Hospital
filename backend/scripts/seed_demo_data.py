@@ -22,7 +22,7 @@ backend_dir = Path(__file__).resolve().parent.parent
 if str(backend_dir) not in sys.path:
     sys.path.insert(0, str(backend_dir))
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.dev")
 
 import django
 
@@ -32,6 +32,9 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 
 User = get_user_model()
+
+# Import Patient model
+from apps.patients.models import BloodType, Gender, Patient
 
 # Demo users configuration
 DEMO_USERS = [
@@ -116,6 +119,147 @@ def print_credentials() -> None:
     print("\nWARNING: These are demo credentials. Do NOT use in production!")
 
 
+# Demo patients configuration
+DEMO_PATIENTS = [
+    {
+        "first_name": "Alice",
+        "last_name": "Johnson",
+        "middle_name": "Marie",
+        "date_of_birth": "1985-03-15",
+        "gender": Gender.FEMALE,
+        "phone": "+15551234567",
+        "email": "alice.johnson@email.com",
+        "address_line1": "123 Oak Street",
+        "city": "Springfield",
+        "state": "IL",
+        "postal_code": "62701",
+        "country": "USA",
+        "blood_type": BloodType.A_POS,
+        "allergies": "Penicillin, Shellfish",
+        "emergency_contact_name": "Bob Johnson",
+        "emergency_contact_phone": "+15559876543",
+        "emergency_contact_relationship": "Spouse",
+    },
+    {
+        "first_name": "Robert",
+        "last_name": "Williams",
+        "date_of_birth": "1972-08-22",
+        "gender": Gender.MALE,
+        "phone": "+15552345678",
+        "email": "robert.williams@email.com",
+        "address_line1": "456 Maple Avenue",
+        "address_line2": "Apt 3B",
+        "city": "Chicago",
+        "state": "IL",
+        "postal_code": "60601",
+        "country": "USA",
+        "blood_type": BloodType.O_NEG,
+        "allergies": "",
+        "emergency_contact_name": "Susan Williams",
+        "emergency_contact_phone": "+15558765432",
+        "emergency_contact_relationship": "Sister",
+    },
+    {
+        "first_name": "Maria",
+        "last_name": "Garcia",
+        "middle_name": "Elena",
+        "date_of_birth": "1990-12-01",
+        "gender": Gender.FEMALE,
+        "phone": "+15553456789",
+        "email": "maria.garcia@email.com",
+        "address_line1": "789 Pine Road",
+        "city": "Naperville",
+        "state": "IL",
+        "postal_code": "60540",
+        "country": "USA",
+        "blood_type": BloodType.B_POS,
+        "allergies": "Latex, Ibuprofen",
+        "emergency_contact_name": "Carlos Garcia",
+        "emergency_contact_phone": "+15557654321",
+        "emergency_contact_relationship": "Brother",
+    },
+    {
+        "first_name": "James",
+        "last_name": "Brown",
+        "date_of_birth": "1958-05-10",
+        "gender": Gender.MALE,
+        "phone": "+15554567890",
+        "email": "james.brown@email.com",
+        "address_line1": "321 Elm Court",
+        "city": "Evanston",
+        "state": "IL",
+        "postal_code": "60201",
+        "country": "USA",
+        "blood_type": BloodType.AB_POS,
+        "allergies": "Sulfa drugs",
+        "emergency_contact_name": "Patricia Brown",
+        "emergency_contact_phone": "+15556543210",
+        "emergency_contact_relationship": "Wife",
+    },
+    {
+        "first_name": "Emily",
+        "last_name": "Davis",
+        "middle_name": "Rose",
+        "date_of_birth": "2005-07-20",
+        "gender": Gender.FEMALE,
+        "phone": "+15555678901",
+        "email": "emily.davis@email.com",
+        "address_line1": "654 Cedar Lane",
+        "city": "Oak Park",
+        "state": "IL",
+        "postal_code": "60301",
+        "country": "USA",
+        "blood_type": BloodType.A_NEG,
+        "allergies": "",
+        "emergency_contact_name": "Michael Davis",
+        "emergency_contact_phone": "+15554321098",
+        "emergency_contact_relationship": "Father",
+    },
+]
+
+
+def create_demo_patients() -> None:
+    """Create demo patients if they don't exist."""
+    from datetime import datetime
+
+    print("\nCreating demo patients...")
+
+    created_count = 0
+    skipped_count = 0
+
+    with transaction.atomic():
+        for patient_data in DEMO_PATIENTS:
+            # Convert date string to date object
+            dob_str = patient_data.pop("date_of_birth")
+            dob = datetime.strptime(dob_str, "%Y-%m-%d").date()
+
+            # Check if patient already exists (by name and DOB)
+            existing = Patient.objects.filter(
+                first_name=patient_data["first_name"],
+                last_name=patient_data["last_name"],
+                date_of_birth=dob,
+            ).first()
+
+            if existing:
+                print(f"  - Skipped (exists): {patient_data['first_name']} {patient_data['last_name']}")
+                skipped_count += 1
+                # Restore for next run
+                patient_data["date_of_birth"] = dob_str
+                continue
+
+            patient = Patient.objects.create(
+                date_of_birth=dob,
+                **patient_data,
+            )
+            print(f"  ✓ Created: {patient.full_name} (MRN: {patient.mrn})")
+            created_count += 1
+
+            # Restore for next run
+            patient_data["date_of_birth"] = dob_str
+
+    print(f"\nSummary: {created_count} created, {skipped_count} skipped")
+
+
 if __name__ == "__main__":
     # Re-add passwords for credential display (they were popped during creation)
     DEMO_USERS[0]["password"] = "admin123!"
@@ -126,3 +270,4 @@ if __name__ == "__main__":
     print_credentials()
     print()
     create_demo_users()
+    create_demo_patients()
