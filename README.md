@@ -1,172 +1,342 @@
-# Hospital Backend System (MVP)# Hospital Backend System
+# Hospital Backend System (MVP)# Hospital Backend System (MVP)# Hospital Backend System
 
 
 
-A modern, enterprise-ready hospital management backend built with Django and high-performance C modules. This MVP provides secure, scalable APIs for user authentication, patient management, and laboratory orders with HL7 validation.A modern, enterprise-ready hospital management backend built with Django and high-performance C modules. This system provides secure, scalable APIs for patient management, appointments, encounters, laboratory orders, billing, and comprehensive audit logging.
+A Django-based hospital management system with secure C modules for cryptography and HL7 validation.
 
 
+
+[![CI](https://github.com/manuel-Igtm/Hospital/actions/workflows/ci.yml/badge.svg)](https://github.com/manuel-Igtm/Hospital/actions/workflows/ci.yml)A modern, enterprise-ready hospital management backend built with Django and high-performance C modules. This MVP provides secure, scalable APIs for user authentication, patient management, and laboratory orders with HL7 validation.A modern, enterprise-ready hospital management backend built with Django and high-performance C modules. This system provides secure, scalable APIs for patient management, appointments, encounters, laboratory orders, billing, and comprehensive audit logging.
+
+[![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/downloads/)
+
+[![Django 5.0](https://img.shields.io/badge/django-5.0-green.svg)](https://www.djangoproject.com/)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## ✨ MVP Features## 📚 Quick Links
 
-
-
-- **User Authentication**: JWT-based auth with role-based access control (RBAC)- **[⚡ QUICKSTART](QUICKSTART.md)** - Get running in 5 minutes
-
-- **Patient Management**: CRUD operations with encrypted SSN using AES-256-GCM- **[📖 PROJECT SUMMARY](PROJECT_SUMMARY.md)** - Complete overview
-
-- **Lab Orders**: Full workflow management with HL7 v2 message validation- **[🐳 Docker Guide](docker/README.md)** - Containerized deployment
-
-- **[💻 Dev Guide](backend/README.md)** - Local development setup
-
-## 🏗️ Architecture- **[📊 Progress Tracking](docs/progress.md)** - Weekly updates
-
-- **[🤝 Contributing](CONTRIBUTING.md)** - How to contribute
-
-**Multi-language approach:**
-
-- **C modules**: High-performance components for data validation (HL7) and cryptographic operations (AES-GCM)## 🏗️ Architecture
-
-- **Django (Python 3.13+)**: REST APIs, business logic, authentication, admin interface
-
-- **PostgreSQL**: Primary production database**Multi-language approach:**
-
-- **SQLite**: In-memory testing- **C modules**: High-performance components for data validation (HL7/FHIR), cryptographic operations (AES-GCM, PHI pseudonymization), ABAC authorization policy evaluation, and billing calculations
-
-- **Django (Python 3.12+)**: REST APIs, business logic, authentication, admin interface, and orchestration
-
-## 🚀 Quick Start- **PostgreSQL**: Primary production database with optimized indexes and partitioning
-
-- **Redis + Celery**: Async task processing
-
-### Prerequisites- **ASGI via Uvicorn/Gunicorn**: Modern async-capable deployment
+## Features
 
 
 
-- Python 3.12+ ## ✨ Key Features
+### MVP Scope
 
-- Git
+- **Authentication**: JWT-based with role-based access control- **User Authentication**: JWT-based auth with role-based access control (RBAC)- **[⚡ QUICKSTART](QUICKSTART.md)** - Get running in 5 minutes
 
-- **Complete Patient Management**: MRN-based patient records with PII protection
+- **Patient Management**: CRUD operations with search and history tracking
 
-### Local Development- **Appointment Scheduling**: Full lifecycle with calendar queries and status tracking
-
-- **Clinical Encounters**: Visit documentation with diagnosis codes, orders, and notes
-
-```bash- **Laboratory Orders**: HL7-validated lab results with LOINC coding
-
-# Clone the repository- **E-Prescribing**: Medication management with ATC codes and dosing
-
-git clone https://github.com/manuel-Igtm/Hospital.git- **Billing & Insurance**: Automated invoice generation with DRG/ICD-based calculations
-
-cd Hospital/backend- **Comprehensive Audit**: Every write operation logged with actor, timestamp, and IP
-
-- **JWT Authentication**: Secure token-based auth with refresh and blacklist
-
-# Create virtual environment- **RBAC + ABAC**: Role-based and attribute-based access control via compiled C policies
-
-python3 -m venv venv- **OpenAPI Documentation**: Auto-generated Swagger UI with examples
-
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-## 🚀 Quick Start
-
-# Install dependencies
-
-pip install -r requirements/dev.txt### Prerequisites
+- **Lab Orders**: Create, track, and manage lab orders with results- **Patient Management**: CRUD operations with encrypted SSN using AES-256-GCM- **[📖 PROJECT SUMMARY](PROJECT_SUMMARY.md)** - Complete overview
 
 
 
-# Run migrations- Docker & Docker Compose (recommended) OR
+### Technical Highlights- **Lab Orders**: Full workflow management with HL7 v2 message validation- **[🐳 Docker Guide](docker/README.md)** - Containerized deployment
 
-python manage.py migrate- Python 3.12+, PostgreSQL 14+, Redis, CMake, GCC/Clang, OpenSSL dev libraries
+- **C Modules**: Native cryptography (AES-256-GCM) and HL7v2.x validation
+
+- **Security**: HIPAA-compliant encryption, audit logging- **[💻 Dev Guide](backend/README.md)** - Local development setup
+
+- **CI/CD**: GitHub Actions, Jenkins pipeline, Kubernetes manifests
+
+- **Testing**: 82% code coverage, 57 tests## 🏗️ Architecture- **[📊 Progress Tracking](docs/progress.md)** - Weekly updates
 
 
 
-# Create superuser### Option 1: Docker (Recommended)
+## Quick Start- **[🤝 Contributing](CONTRIBUTING.md)** - How to contribute
 
-python manage.py createsuperuser
 
-```bash
 
-# Run development server# Clone the repository
+### Prerequisites**Multi-language approach:**
 
-python manage.py runservergit clone https://github.com/manuel-Igtm/Hospital.git
+- Python 3.13+
+
+- PostgreSQL 14+- **C modules**: High-performance components for data validation (HL7) and cryptographic operations (AES-GCM)## 🏗️ Architecture
+
+- Docker (optional)
+
+- GCC and OpenSSL development libraries (for C modules)- **Django (Python 3.13+)**: REST APIs, business logic, authentication, admin interface
+
+
+
+### Installation- **PostgreSQL**: Primary production database**Multi-language approach:**
+
+
+
+```bash- **SQLite**: In-memory testing- **C modules**: High-performance components for data validation (HL7/FHIR), cryptographic operations (AES-GCM, PHI pseudonymization), ABAC authorization policy evaluation, and billing calculations
+
+# Clone the repository
+
+git clone https://github.com/manuel-Igtm/Hospital.git- **Django (Python 3.12+)**: REST APIs, business logic, authentication, admin interface, and orchestration
 
 cd Hospital
 
-# Access the services:
+## 🚀 Quick Start- **PostgreSQL**: Primary production database with optimized indexes and partitioning
 
-# - API: http://localhost:8000/api/v1/# Copy environment template
+# Create virtual environment
 
-# - Admin: http://localhost:8000/admin/cp docker/.env.example docker/.env
+python -m venv venv- **Redis + Celery**: Async task processing
 
-```
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Start all services
+### Prerequisites- **ASGI via Uvicorn/Gunicorn**: Modern async-capable deployment
 
-## 🧪 Running Testsdocker compose -f docker/docker-compose.yml up -d
+# Install dependencies
+
+pip install -r backend/requirements/dev.txt
 
 
 
-```bash# Wait for database to be ready, then run migrations
+# Build C modules (optional, provides AES encryption and HL7 validation)- Python 3.12+ ## ✨ Key Features
 
-cd backenddocker compose -f docker/docker-compose.yml exec web python manage.py migrate
+cd native && pip install -e . && cd ..
 
-source venv/bin/activate
+- Git
+
+# Set up environment variables
+
+cp backend/.env.example backend/.env- **Complete Patient Management**: MRN-based patient records with PII protection
+
+# Edit .env with your database credentials
+
+### Local Development- **Appointment Scheduling**: Full lifecycle with calendar queries and status tracking
+
+# Run migrations
+
+cd backend- **Clinical Encounters**: Visit documentation with diagnosis codes, orders, and notes
+
+python manage.py migrate
+
+```bash- **Laboratory Orders**: HL7-validated lab results with LOINC coding
 
 # Create superuser
 
-# Run all tests with coveragedocker compose -f docker/docker-compose.yml exec web python manage.py createsuperuser
+python manage.py createsuperuser# Clone the repository- **E-Prescribing**: Medication management with ATC codes and dosing
 
-pytest
 
-# Load demo data
 
-# Run specific test filedocker compose -f docker/docker-compose.yml exec web python scripts/seed_demo_data.py
+# Run development servergit clone https://github.com/manuel-Igtm/Hospital.git- **Billing & Insurance**: Automated invoice generation with DRG/ICD-based calculations
 
-pytest tests/test_users.py -v
+python manage.py runserver
 
-# Access the services:
+```cd Hospital/backend- **Comprehensive Audit**: Every write operation logged with actor, timestamp, and IP
 
-# Run with verbose output# - API: http://localhost:8000/api/v1/
+
+
+### Docker Deployment- **JWT Authentication**: Secure token-based auth with refresh and blacklist
+
+
+
+```bash# Create virtual environment- **RBAC + ABAC**: Role-based and attribute-based access control via compiled C policies
+
+# Build and run with Docker Compose
+
+docker compose up -dpython3 -m venv venv- **OpenAPI Documentation**: Auto-generated Swagger UI with examples
+
+
+
+# Or build image directlysource venv/bin/activate  # On Windows: venv\Scripts\activate
+
+docker build -t hospital-backend .
+
+docker run -p 8000:8000 hospital-backend## 🚀 Quick Start
+
+```
+
+# Install dependencies
+
+## API Endpoints
+
+pip install -r requirements/dev.txt### Prerequisites
+
+### Authentication
+
+| Method | Endpoint | Description |
+
+|--------|----------|-------------|
+
+| POST | `/api/v1/auth/register/` | Register new user |# Run migrations- Docker & Docker Compose (recommended) OR
+
+| POST | `/api/v1/auth/login/` | Obtain JWT tokens |
+
+| POST | `/api/v1/auth/refresh/` | Refresh access token |python manage.py migrate- Python 3.12+, PostgreSQL 14+, Redis, CMake, GCC/Clang, OpenSSL dev libraries
+
+| POST | `/api/v1/auth/logout/` | Blacklist refresh token |
+
+| GET | `/api/v1/auth/me/` | Current user profile |
+
+
+
+### Patients# Create superuser### Option 1: Docker (Recommended)
+
+| Method | Endpoint | Description |
+
+|--------|----------|-------------|python manage.py createsuperuser
+
+| GET | `/api/v1/patients/` | List patients (paginated) |
+
+| POST | `/api/v1/patients/` | Create patient |```bash
+
+| GET | `/api/v1/patients/{id}/` | Get patient details |
+
+| PUT | `/api/v1/patients/{id}/` | Update patient |# Run development server# Clone the repository
+
+| DELETE | `/api/v1/patients/{id}/` | Delete patient |
+
+| GET | `/api/v1/patients/{id}/history/` | Patient history |python manage.py runservergit clone https://github.com/manuel-Igtm/Hospital.git
+
+
+
+### Lab Orderscd Hospital
+
+| Method | Endpoint | Description |
+
+|--------|----------|-------------|# Access the services:
+
+| GET | `/api/v1/lab-orders/` | List lab orders |
+
+| POST | `/api/v1/lab-orders/` | Create lab order |# - API: http://localhost:8000/api/v1/# Copy environment template
+
+| GET | `/api/v1/lab-orders/{id}/` | Get order details |
+
+| PATCH | `/api/v1/lab-orders/{id}/` | Update order/results |# - Admin: http://localhost:8000/admin/cp docker/.env.example docker/.env
+
+| GET | `/api/v1/lab-orders/patient/{id}/` | Orders by patient |
+
+```
+
+## User Roles
+
+# Start all services
+
+| Role | Permissions |
+
+|------|-------------|## 🧪 Running Testsdocker compose -f docker/docker-compose.yml up -d
+
+| Admin | Full system access |
+
+| Doctor | View patients, create/view orders, view results |
+
+| Nurse | View patients, view orders |
+
+| Lab Technician | View orders, enter results |```bash# Wait for database to be ready, then run migrations
+
+
+
+## Project Structurecd backenddocker compose -f docker/docker-compose.yml exec web python manage.py migrate
+
+
+
+```source venv/bin/activate
+
+Hospital/
+
+├── backend/# Create superuser
+
+│   ├── apps/
+
+│   │   ├── core/          # Shared utilities, encryption# Run all tests with coveragedocker compose -f docker/docker-compose.yml exec web python manage.py createsuperuser
+
+│   │   ├── users/         # Authentication, roles
+
+│   │   ├── patients/      # Patient managementpytest
+
+│   │   └── lab_orders/    # Lab order tracking
+
+│   ├── config/            # Django settings# Load demo data
+
+│   └── requirements/      # Dependencies
+
+├── native/# Run specific test filedocker compose -f docker/docker-compose.yml exec web python scripts/seed_demo_data.py
+
+│   ├── libcutils/         # AES-256-GCM encryption
+
+│   └── libhl7val/         # HL7v2.x validationpytest tests/test_users.py -v
+
+├── k8s/                   # Kubernetes manifests
+
+├── docker-compose.yml# Access the services:
+
+├── Dockerfile
+
+└── Jenkinsfile# Run with verbose output# - API: http://localhost:8000/api/v1/
+
+```
 
 pytest -v --tb=long# - API Docs: http://localhost:8000/api/v1/docs/
 
+## Environment Variables
+
 ```# - Admin: http://localhost:8000/admin/
 
-# - PgAdmin: http://localhost:5050/
+| Variable | Description | Default |
 
-**Current test status: 57 tests passing, 82% coverage**```
+|----------|-------------|---------|# - PgAdmin: http://localhost:5050/
+
+| `DATABASE_URL` | PostgreSQL connection string | - |
+
+| `SECRET_KEY` | Django secret key | - |**Current test status: 57 tests passing, 82% coverage**```
+
+| `DEBUG` | Debug mode | `False` |
+
+| `ALLOWED_HOSTS` | Comma-separated hosts | `localhost` |
+
+| `CORS_ALLOWED_ORIGINS` | CORS origins | - |
+
+| `SENTRY_DSN` | Sentry error tracking | - |## 📊 API Endpoints### Option 2: Local Development
 
 
 
-## 📊 API Endpoints### Option 2: Local Development
+## Testing
 
 
 
-### Authentication (`/api/v1/auth/`)```bash
+```bash### Authentication (`/api/v1/auth/`)```bash
 
-# Install C dependencies (Ubuntu/Debian)
+cd backend
+
+pytest --cov=apps --cov-report=html# Install C dependencies (Ubuntu/Debian)
+
+```
 
 | Endpoint | Method | Description | Auth Required |sudo apt-get install build-essential cmake libssl-dev
 
+## Contributing
+
 |----------|--------|-------------|---------------|
 
-| `/login/` | POST | Get JWT tokens | No |# Build C modules
+1. Fork the repository
 
-| `/refresh/` | POST | Refresh access token | No |cd native
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)| `/login/` | POST | Get JWT tokens | No |# Build C modules
+
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+
+4. Push to the branch (`git push origin feature/amazing-feature`)| `/refresh/` | POST | Refresh access token | No |cd native
+
+5. Open a Pull Request
 
 | `/logout/` | POST | Blacklist refresh token | Yes |mkdir build && cd build
 
+## License
+
 | `/me/` | GET | Get current user info | Yes |cmake ..
+
+MIT License - see [LICENSE](LICENSE) for details.
 
 | `/me/` | PATCH | Update current user | Yes |make
 
+## Author
+
 | `/change-password/` | POST | Change password | Yes |cd ../..
 
+**Immanuel Njogu** - [GitHub](https://github.com/manuel-Igtm)
 
+
+
+---
 
 ### Users (`/api/v1/users/`) - Admin only# Build Python extension
+
+© 2025 Immanuel Njogu. All rights reserved.
 
 cd native
 
