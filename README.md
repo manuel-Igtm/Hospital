@@ -1,250 +1,498 @@
-# Hospital Backend System
+# Hospital Backend System (MVP)# Hospital Backend System
 
-A modern, enterprise-ready hospital management backend built with Django and high-performance C modules. This system provides secure, scalable APIs for patient management, appointments, encounters, laboratory orders, billing, and comprehensive audit logging.
 
-## 📚 Quick Links
 
-- **[⚡ QUICKSTART](QUICKSTART.md)** - Get running in 5 minutes
-- **[📖 PROJECT SUMMARY](PROJECT_SUMMARY.md)** - Complete overview
-- **[🐳 Docker Guide](docker/README.md)** - Containerized deployment
+A modern, enterprise-ready hospital management backend built with Django and high-performance C modules. This MVP provides secure, scalable APIs for user authentication, patient management, and laboratory orders with HL7 validation.A modern, enterprise-ready hospital management backend built with Django and high-performance C modules. This system provides secure, scalable APIs for patient management, appointments, encounters, laboratory orders, billing, and comprehensive audit logging.
+
+
+
+## ✨ MVP Features## 📚 Quick Links
+
+
+
+- **User Authentication**: JWT-based auth with role-based access control (RBAC)- **[⚡ QUICKSTART](QUICKSTART.md)** - Get running in 5 minutes
+
+- **Patient Management**: CRUD operations with encrypted SSN using AES-256-GCM- **[📖 PROJECT SUMMARY](PROJECT_SUMMARY.md)** - Complete overview
+
+- **Lab Orders**: Full workflow management with HL7 v2 message validation- **[🐳 Docker Guide](docker/README.md)** - Containerized deployment
+
 - **[💻 Dev Guide](backend/README.md)** - Local development setup
-- **[📊 Progress Tracking](docs/progress.md)** - Weekly updates
+
+## 🏗️ Architecture- **[📊 Progress Tracking](docs/progress.md)** - Weekly updates
+
 - **[🤝 Contributing](CONTRIBUTING.md)** - How to contribute
 
-## 🏗️ Architecture
-
 **Multi-language approach:**
-- **C modules**: High-performance components for data validation (HL7/FHIR), cryptographic operations (AES-GCM, PHI pseudonymization), ABAC authorization policy evaluation, and billing calculations
-- **Django (Python 3.12+)**: REST APIs, business logic, authentication, admin interface, and orchestration
-- **PostgreSQL**: Primary production database with optimized indexes and partitioning
-- **Redis + Celery**: Async task processing
-- **ASGI via Uvicorn/Gunicorn**: Modern async-capable deployment
 
-## ✨ Key Features
+- **C modules**: High-performance components for data validation (HL7) and cryptographic operations (AES-GCM)## 🏗️ Architecture
+
+- **Django (Python 3.13+)**: REST APIs, business logic, authentication, admin interface
+
+- **PostgreSQL**: Primary production database**Multi-language approach:**
+
+- **SQLite**: In-memory testing- **C modules**: High-performance components for data validation (HL7/FHIR), cryptographic operations (AES-GCM, PHI pseudonymization), ABAC authorization policy evaluation, and billing calculations
+
+- **Django (Python 3.12+)**: REST APIs, business logic, authentication, admin interface, and orchestration
+
+## 🚀 Quick Start- **PostgreSQL**: Primary production database with optimized indexes and partitioning
+
+- **Redis + Celery**: Async task processing
+
+### Prerequisites- **ASGI via Uvicorn/Gunicorn**: Modern async-capable deployment
+
+
+
+- Python 3.12+ ## ✨ Key Features
+
+- Git
 
 - **Complete Patient Management**: MRN-based patient records with PII protection
-- **Appointment Scheduling**: Full lifecycle with calendar queries and status tracking
+
+### Local Development- **Appointment Scheduling**: Full lifecycle with calendar queries and status tracking
+
 - **Clinical Encounters**: Visit documentation with diagnosis codes, orders, and notes
-- **Laboratory Orders**: HL7-validated lab results with LOINC coding
-- **E-Prescribing**: Medication management with ATC codes and dosing
-- **Billing & Insurance**: Automated invoice generation with DRG/ICD-based calculations
-- **Comprehensive Audit**: Every write operation logged with actor, timestamp, and IP
+
+```bash- **Laboratory Orders**: HL7-validated lab results with LOINC coding
+
+# Clone the repository- **E-Prescribing**: Medication management with ATC codes and dosing
+
+git clone https://github.com/manuel-Igtm/Hospital.git- **Billing & Insurance**: Automated invoice generation with DRG/ICD-based calculations
+
+cd Hospital/backend- **Comprehensive Audit**: Every write operation logged with actor, timestamp, and IP
+
 - **JWT Authentication**: Secure token-based auth with refresh and blacklist
-- **RBAC + ABAC**: Role-based and attribute-based access control via compiled C policies
-- **OpenAPI Documentation**: Auto-generated Swagger UI with examples
+
+# Create virtual environment- **RBAC + ABAC**: Role-based and attribute-based access control via compiled C policies
+
+python3 -m venv venv- **OpenAPI Documentation**: Auto-generated Swagger UI with examples
+
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 ## 🚀 Quick Start
 
-### Prerequisites
+# Install dependencies
 
-- Docker & Docker Compose (recommended) OR
-- Python 3.12+, PostgreSQL 14+, Redis, CMake, GCC/Clang, OpenSSL dev libraries
+pip install -r requirements/dev.txt### Prerequisites
 
-### Option 1: Docker (Recommended)
 
-```bash
-# Clone the repository
-git clone https://github.com/manuel-Igtm/Hospital.git
-cd Hospital
 
-# Copy environment template
-cp docker/.env.example docker/.env
+# Run migrations- Docker & Docker Compose (recommended) OR
 
-# Start all services
-docker compose -f docker/docker-compose.yml up -d
+python manage.py migrate- Python 3.12+, PostgreSQL 14+, Redis, CMake, GCC/Clang, OpenSSL dev libraries
 
-# Wait for database to be ready, then run migrations
-docker compose -f docker/docker-compose.yml exec web python manage.py migrate
 
-# Create superuser
-docker compose -f docker/docker-compose.yml exec web python manage.py createsuperuser
 
-# Load demo data
-docker compose -f docker/docker-compose.yml exec web python scripts/seed_demo_data.py
+# Create superuser### Option 1: Docker (Recommended)
 
-# Access the services:
-# - API: http://localhost:8000/api/v1/
-# - API Docs: http://localhost:8000/api/v1/docs/
-# - Admin: http://localhost:8000/admin/
-# - PgAdmin: http://localhost:5050/
-```
-
-### Option 2: Local Development
-
-```bash
-# Install C dependencies (Ubuntu/Debian)
-sudo apt-get install build-essential cmake libssl-dev
-
-# Build C modules
-cd native
-mkdir build && cd build
-cmake ..
-make
-cd ../..
-
-# Build Python extension
-cd native
-pip install -e .
-cd ..
-
-# Create virtual environment
-python3.12 -m venv venv
-source venv/bin/activate
-
-# Install Python dependencies
-pip install -r backend/requirements/dev.txt
-
-# Setup environment
-cp docker/.env.example .env
-# Edit .env with your local PostgreSQL credentials
-
-# Run migrations
-cd backend
-python manage.py migrate
-
-# Create superuser
 python manage.py createsuperuser
 
-# Load demo data
-python scripts/seed_demo_data.py
+```bash
 
-# Run development server
-python manage.py runserver
+# Run development server# Clone the repository
 
-# In another terminal, start Celery worker
-celery -A config worker -l info
+python manage.py runservergit clone https://github.com/manuel-Igtm/Hospital.git
+
+cd Hospital
+
+# Access the services:
+
+# - API: http://localhost:8000/api/v1/# Copy environment template
+
+# - Admin: http://localhost:8000/admin/cp docker/.env.example docker/.env
+
 ```
 
-## 🧪 Running Tests
+# Start all services
+
+## 🧪 Running Testsdocker compose -f docker/docker-compose.yml up -d
+
+
+
+```bash# Wait for database to be ready, then run migrations
+
+cd backenddocker compose -f docker/docker-compose.yml exec web python manage.py migrate
+
+source venv/bin/activate
+
+# Create superuser
+
+# Run all tests with coveragedocker compose -f docker/docker-compose.yml exec web python manage.py createsuperuser
+
+pytest
+
+# Load demo data
+
+# Run specific test filedocker compose -f docker/docker-compose.yml exec web python scripts/seed_demo_data.py
+
+pytest tests/test_users.py -v
+
+# Access the services:
+
+# Run with verbose output# - API: http://localhost:8000/api/v1/
+
+pytest -v --tb=long# - API Docs: http://localhost:8000/api/v1/docs/
+
+```# - Admin: http://localhost:8000/admin/
+
+# - PgAdmin: http://localhost:5050/
+
+**Current test status: 57 tests passing, 82% coverage**```
+
+
+
+## 📊 API Endpoints### Option 2: Local Development
+
+
+
+### Authentication (`/api/v1/auth/`)```bash
+
+# Install C dependencies (Ubuntu/Debian)
+
+| Endpoint | Method | Description | Auth Required |sudo apt-get install build-essential cmake libssl-dev
+
+|----------|--------|-------------|---------------|
+
+| `/login/` | POST | Get JWT tokens | No |# Build C modules
+
+| `/refresh/` | POST | Refresh access token | No |cd native
+
+| `/logout/` | POST | Blacklist refresh token | Yes |mkdir build && cd build
+
+| `/me/` | GET | Get current user info | Yes |cmake ..
+
+| `/me/` | PATCH | Update current user | Yes |make
+
+| `/change-password/` | POST | Change password | Yes |cd ../..
+
+
+
+### Users (`/api/v1/users/`) - Admin only# Build Python extension
+
+cd native
+
+| Endpoint | Method | Description |pip install -e .
+
+|----------|--------|-------------|cd ..
+
+| `/` | GET | List all users |
+
+| `/` | POST | Create user |# Create virtual environment
+
+| `/{id}/` | GET | Get user details |python3.12 -m venv venv
+
+| `/{id}/` | PUT/PATCH | Update user |source venv/bin/activate
+
+| `/{id}/` | DELETE | Deactivate user |
+
+| `/{id}/activate/` | POST | Reactivate user |# Install Python dependencies
+
+pip install -r backend/requirements/dev.txt
+
+### Patients (`/api/v1/patients/`)
+
+# Setup environment
+
+| Endpoint | Method | Description | Permissions |cp docker/.env.example .env
+
+|----------|--------|-------------|-------------|# Edit .env with your local PostgreSQL credentials
+
+| `/` | GET | List patients | All staff |
+
+| `/` | POST | Create patient | Clinical staff |# Run migrations
+
+| `/{id}/` | GET | Get patient details | All staff |cd backend
+
+| `/{id}/` | PUT/PATCH | Update patient | Clinical staff |python manage.py migrate
+
+| `/{id}/` | DELETE | Deactivate patient | Admin only |
+
+| `/find_by_ssn/` | GET | Find by SSN | All staff |# Create superuser
+
+python manage.py createsuperuser
+
+### Lab Orders (`/api/v1/lab/`)
+
+# Load demo data
+
+| Endpoint | Method | Description | Permissions |python scripts/seed_demo_data.py
+
+|----------|--------|-------------|-------------|
+
+| `/test-types/` | GET | List test catalog | All |# Run development server
+
+| `/test-types/` | POST | Create test type | Admin |python manage.py runserver
+
+| `/orders/` | GET | List lab orders | All staff |
+
+| `/orders/` | POST | Create order | Doctor/Nurse |# In another terminal, start Celery worker
+
+| `/orders/{id}/collect/` | POST | Mark specimen collected | Lab Tech |celery -A config worker -l info
+
+| `/orders/{id}/cancel/` | POST | Cancel order | Doctor |```
+
+| `/results/` | GET | List results | All staff |
+
+| `/results/` | POST | Submit result | Lab Tech |## 🧪 Running Tests
+
+| `/results/{id}/review/` | POST | Review result | Doctor |
 
 ### All Tests (Docker)
-```bash
-docker compose -f docker/docker-compose.yml exec web make test
-```
 
-### C Module Tests
-```bash
-cd native/build
-ctest --output-on-failure
+## 👤 User Roles```bash
+
+docker compose -f docker/docker-compose.yml exec web make test
+
+| Role | Code | Capabilities |```
+
+|------|------|--------------|
+
+| Administrator | `ADMIN` | Full system access |### C Module Tests
+
+| Doctor | `DOCTOR` | Patient care, create orders, review results |```bash
+
+| Nurse | `NURSE` | Patient care, create orders |cd native/build
+
+| Lab Technician | `LAB_TECH` | Collect specimens, enter results |ctest --output-on-failure
+
+| Receptionist | `RECEPTIONIST` | View patients (read-only) |
 
 # With Valgrind (memory leak detection)
-ctest -T memcheck
+
+## 🔐 Authentication Flowctest -T memcheck
+
 ```
 
-### Django Tests
 ```bash
-cd backend
-pytest --cov=apps --cov-report=html --cov-report=term
+
+# 1. Login to get tokens### Django Tests
+
+curl -X POST http://localhost:8000/api/v1/auth/login/ \```bash
+
+  -H "Content-Type: application/json" \cd backend
+
+  -d '{"email": "admin@hospital.test", "password": "AdminPass123!"}'pytest --cov=apps --cov-report=html --cov-report=term
+
 ```
 
-### Linting & Type Checking
-```bash
-make lint        # Run all linters
-make format      # Auto-format code
-```
+# Response:
 
-## 📊 Environment Variables
+# {### Linting & Type Checking
 
-| Variable | Description | Default | Required |
+#   "access": "eyJ0eXAiOiJKV1Q...",```bash
+
+#   "refresh": "eyJ0eXAiOiJKV1Q...",make lint        # Run all linters
+
+#   "user": {"email": "admin@hospital.test", "role": "ADMIN", ...}make format      # Auto-format code
+
+# }```
+
+
+
+# 2. Use access token in subsequent requests## 📊 Environment Variables
+
+curl -X GET http://localhost:8000/api/v1/patients/ \
+
+  -H "Authorization: Bearer eyJ0eXAiOiJKV1Q..."| Variable | Description | Default | Required |
+
 |----------|-------------|---------|----------|
-| `DJANGO_SECRET_KEY` | Django secret key | - | Yes |
-| `DJANGO_DEBUG` | Debug mode | `False` | No |
-| `DJANGO_ALLOWED_HOSTS` | Comma-separated hosts | `localhost,127.0.0.1` | No |
-| `DATABASE_URL` | PostgreSQL connection string | - | Yes (prod) |
+
+# 3. Refresh token when access token expires (15 min)| `DJANGO_SECRET_KEY` | Django secret key | - | Yes |
+
+curl -X POST http://localhost:8000/api/v1/auth/refresh/ \| `DJANGO_DEBUG` | Debug mode | `False` | No |
+
+  -H "Content-Type: application/json" \| `DJANGO_ALLOWED_HOSTS` | Comma-separated hosts | `localhost,127.0.0.1` | No |
+
+  -d '{"refresh": "eyJ0eXAiOiJKV1Q..."}'| `DATABASE_URL` | PostgreSQL connection string | - | Yes (prod) |
+
 | `REDIS_URL` | Redis connection string | `redis://redis:6379/0` | Yes |
-| `CELERY_BROKER_URL` | Celery broker | Same as `REDIS_URL` | Yes |
-| `JWT_ACCESS_TOKEN_LIFETIME` | Access token expiry | `15` (minutes) | No |
-| `JWT_REFRESH_TOKEN_LIFETIME` | Refresh token expiry | `7` (days) | No |
-| `CORS_ALLOWED_ORIGINS` | CORS origins | `http://localhost:3000` | No |
-| `LOG_LEVEL` | Logging level | `INFO` | No |
+
+# 4. Logout (blacklist refresh token)| `CELERY_BROKER_URL` | Celery broker | Same as `REDIS_URL` | Yes |
+
+curl -X POST http://localhost:8000/api/v1/auth/logout/ \| `JWT_ACCESS_TOKEN_LIFETIME` | Access token expiry | `15` (minutes) | No |
+
+  -H "Authorization: Bearer eyJ0eXAiOiJKV1Q..." \| `JWT_REFRESH_TOKEN_LIFETIME` | Refresh token expiry | `7` (days) | No |
+
+  -H "Content-Type: application/json" \| `CORS_ALLOWED_ORIGINS` | CORS origins | `http://localhost:3000` | No |
+
+  -d '{"refresh": "eyJ0eXAiOiJKV1Q..."}'| `LOG_LEVEL` | Logging level | `INFO` | No |
+
+```
 
 ## 👤 Demo Users
 
+## 🗄️ Project Structure
+
 After running `seed_demo_data.py`, the following users are available:
 
-| Username | Password | Role | Capabilities |
-|----------|----------|------|--------------|
-| `admin` | `admin123!` | Superuser | Full system access |
-| `dr.smith` | `doctor123!` | Doctor | Clinical operations |
-| `nurse.jane` | `nurse123!` | Nurse | Patient care |
-| `lab.tech` | `lab123!` | Lab Tech | Lab results entry |
-| `billing.clerk` | `billing123!` | Billing | Invoice management |
-
-**⚠️ Change these passwords in production!**
-
-## 📖 API Documentation
-
-### Authentication
-
-All endpoints (except `/auth/login` and health checks) require JWT authentication:
-
-```bash
-# Login
-curl -X POST http://localhost:8000/api/v1/auth/login/ \
-  -H "Content-Type: application/json" \
-  -d '{"username": "dr.smith", "password": "doctor123!"}'
-
-# Response
-{
-  "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
-  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc..."
-}
-
-# Use access token in subsequent requests
-curl -X GET http://localhost:8000/api/v1/patients/ \
-  -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc..."
 ```
 
-### Key Endpoints
+Hospital/| Username | Password | Role | Capabilities |
 
-- **Auth**: `/api/v1/auth/` - login, refresh, logout, me
-- **Patients**: `/api/v1/patients/` - CRUD, search, bulk import
-- **Appointments**: `/api/v1/appointments/` - scheduling, check-in, reschedule
-- **Encounters**: `/api/v1/encounters/` - clinical visits, diagnoses
-- **Orders**: `/api/v1/orders/` - lab/radiology orders
+├── LICENSE                    # Commercial license (Immanuel Njogu)|----------|----------|------|--------------|
+
+├── README.md                  # This file| `admin` | `admin123!` | Superuser | Full system access |
+
+├── Makefile                   # Common development tasks| `dr.smith` | `doctor123!` | Doctor | Clinical operations |
+
+├── .github/workflows/         # CI/CD pipelines| `nurse.jane` | `nurse123!` | Nurse | Patient care |
+
+│   └── ci.yml| `lab.tech` | `lab123!` | Lab Tech | Lab results entry |
+
+├── backend/                   # Django project| `billing.clerk` | `billing123!` | Billing | Invoice management |
+
+│   ├── manage.py
+
+│   ├── pyproject.toml         # Python project config**⚠️ Change these passwords in production!**
+
+│   ├── config/                # Settings and routing
+
+│   │   ├── settings/## 📖 API Documentation
+
+│   │   │   ├── base.py        # Common settings
+
+│   │   │   ├── dev.py         # Development settings### Authentication
+
+│   │   │   ├── prod.py        # Production settings
+
+│   │   │   └── test.py        # Test settingsAll endpoints (except `/auth/login` and health checks) require JWT authentication:
+
+│   │   └── urls.py
+
+│   ├── apps/```bash
+
+│   │   ├── core/              # Common utilities, encryption# Login
+
+│   │   ├── users/             # Authentication & RBACcurl -X POST http://localhost:8000/api/v1/auth/login/ \
+
+│   │   ├── patients/          # Patient management  -H "Content-Type: application/json" \
+
+│   │   └── lab_orders/        # Lab order workflow  -d '{"username": "dr.smith", "password": "doctor123!"}'
+
+│   ├── requirements/
+
+│   │   ├── base.txt# Response
+
+│   │   ├── dev.txt{
+
+│   │   ├── prod.txt  "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+
+│   │   └── test.txt  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+
+│   └── tests/                 # Test suite}
+
+│       ├── conftest.py        # Pytest fixtures
+
+│       ├── test_users.py# Use access token in subsequent requests
+
+│       ├── test_patients.pycurl -X GET http://localhost:8000/api/v1/patients/ \
+
+│       └── test_lab_orders.py  -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc..."
+
+├── docker/                    # Docker configurations```
+
+│   ├── Dockerfile
+
+│   ├── docker-compose.yml### Key Endpoints
+
+│   └── .env.example
+
+└── native/                    # C modules (optional)- **Auth**: `/api/v1/auth/` - login, refresh, logout, me
+
+    ├── CMakeLists.txt- **Patients**: `/api/v1/patients/` - CRUD, search, bulk import
+
+    ├── include/- **Appointments**: `/api/v1/appointments/` - scheduling, check-in, reschedule
+
+    └── src/- **Encounters**: `/api/v1/encounters/` - clinical visits, diagnoses
+
+```- **Orders**: `/api/v1/orders/` - lab/radiology orders
+
 - **Labs**: `/api/v1/labs/` - result entry and queries
-- **Medications**: `/api/v1/medications/` - medication catalog
+
+## 📈 Lab Order Workflow- **Medications**: `/api/v1/medications/` - medication catalog
+
 - **Prescriptions**: `/api/v1/prescriptions/` - e-prescribing
-- **Billing**: `/api/v1/billing/` - invoices, payments
-- **Insurance**: `/api/v1/insurance/` - policy management
-- **Audit**: `/api/v1/audit/` - audit log queries
-- **Health**: `/health/`, `/ping/` - service health
+
+```- **Billing**: `/api/v1/billing/` - invoices, payments
+
+[PENDING] → [COLLECTED] → [RESULTED] → [REVIEWED]- **Insurance**: `/api/v1/insurance/` - policy management
+
+     ↓- **Audit**: `/api/v1/audit/` - audit log queries
+
+[CANCELLED]- **Health**: `/health/`, `/ping/` - service health
+
+```
 
 Full interactive documentation: **http://localhost:8000/api/v1/docs/**
 
-## 🏛️ Database Schema
+1. **PENDING**: Order created by doctor/nurse
 
-The system uses a normalized PostgreSQL schema with the following core entities:
+2. **COLLECTED**: Specimen collected by lab tech## 🏛️ Database Schema
+
+3. **RESULTED**: Results entered by lab tech
+
+4. **REVIEWED**: Results reviewed by doctorThe system uses a normalized PostgreSQL schema with the following core entities:
+
+5. **CANCELLED**: Order cancelled (only from PENDING state)
 
 - **Patient**: Demographics, MRN, PII pseudonymization tokens
-- **Staff**: Employees with roles and departments
+
+## 🔒 Security Features- **Staff**: Employees with roles and departments
+
 - **Appointment**: Scheduling with status tracking
-- **Encounter**: Clinical visits linking patient, staff, diagnoses
-- **Order**: Lab/radiology/consult requests
-- **LabResult**: LOINC-coded results with reference ranges
-- **Medication**: Drug catalog with ATC codes
-- **Prescription**: Dosing instructions linked to encounters
-- **BillingInvoice**: DRG/ICD-calculated charges
+
+- **JWT Authentication** with 15-minute access tokens and 7-day refresh tokens- **Encounter**: Clinical visits linking patient, staff, diagnoses
+
+- **Token Blacklisting** on logout- **Order**: Lab/radiology/consult requests
+
+- **AES-256-GCM Encryption** for sensitive data (SSN)- **LabResult**: LOINC-coded results with reference ranges
+
+- **Role-Based Access Control** (RBAC) with 5 predefined roles- **Medication**: Drug catalog with ATC codes
+
+- **Input Validation** with DRF serializers- **Prescription**: Dosing instructions linked to encounters
+
+- **SQL Injection Protection** via Django ORM- **BillingInvoice**: DRG/ICD-calculated charges
+
 - **InsurancePolicy**: Coverage information
-- **AuditLog**: Complete change tracking (partitioned by month)
 
-See `docs/database.md` for ER diagrams and optimization details.
+## 🛠️ Environment Variables- **AuditLog**: Complete change tracking (partitioned by month)
 
-## 🔒 Security Features
 
-- **JWT with short-lived tokens** and refresh mechanism
-- **PII pseudonymization** via C-accelerated crypto (AES-GCM)
+
+| Variable | Description | Default |See `docs/database.md` for ER diagrams and optimization details.
+
+|----------|-------------|---------|
+
+| `DJANGO_SECRET_KEY` | Django secret key | *required* |## 🔒 Security Features
+
+| `DJANGO_DEBUG` | Debug mode | `False` |
+
+| `DATABASE_URL` | PostgreSQL connection | SQLite for dev |- **JWT with short-lived tokens** and refresh mechanism
+
+| `ENCRYPTION_KEY` | 32-byte key for AES-GCM | *generated* |- **PII pseudonymization** via C-accelerated crypto (AES-GCM)
+
 - **Field-level encryption** for sensitive data
-- **RBAC + ABAC**: Compiled policy evaluation in C for performance
+
+## 📄 License- **RBAC + ABAC**: Compiled policy evaluation in C for performance
+
 - **Comprehensive audit logging** of all mutations
-- **Rate limiting** on authentication and write endpoints
+
+Copyright (c) 2025, Immanuel Njogu. All rights reserved.- **Rate limiting** on authentication and write endpoints
+
 - **Input validation** via HL7/FHIR validators in C
-- **OWASP ASVS aligned** (see `docs/operations.md`)
+
+This software is available for non-commercial use. Commercial use requires explicit written permission from Immanuel Njogu.- **OWASP ASVS aligned** (see `docs/operations.md`)
+
 - **No hardcoded secrets** - all via environment variables
-- **SQL injection protection** via Django ORM
+
+See [LICENSE](LICENSE) for complete terms.- **SQL injection protection** via Django ORM
+
 - **XSS protection** via Django defaults and DRF
 
+---
+
 ## 🛠️ Development
+
+**Built with ❤️ for modern healthcare infrastructure**
 
 ### Project Structure
 

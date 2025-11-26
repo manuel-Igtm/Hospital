@@ -86,6 +86,16 @@ class PatientViewSet(viewsets.ModelViewSet):
         
         return queryset
     
+    def create(self, request, *args, **kwargs):
+        """Create a patient and return full details."""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        patient = serializer.save()
+        
+        # Return full patient details using detail serializer
+        detail_serializer = PatientDetailSerializer(patient)
+        return Response(detail_serializer.data, status=status.HTTP_201_CREATED)
+    
     def destroy(self, request, *args, **kwargs):
         """
         Soft delete - deactivate patient instead of deleting.

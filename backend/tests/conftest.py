@@ -82,28 +82,32 @@ def receptionist_user(db):
 
 
 @pytest.fixture
-def authenticated_admin_client(api_client, admin_user):
+def authenticated_admin_client(admin_user):
     """Return an API client authenticated as admin."""
-    api_client.force_authenticate(user=admin_user)
-    return api_client
+    client = APIClient()
+    client.force_authenticate(user=admin_user)
+    return client
 
 
 @pytest.fixture
-def authenticated_doctor_client(api_client, doctor_user):
+def authenticated_doctor_client(doctor_user):
     """Return an API client authenticated as doctor."""
-    api_client.force_authenticate(user=doctor_user)
-    return api_client
+    client = APIClient()
+    client.force_authenticate(user=doctor_user)
+    return client
 
 
 @pytest.fixture
-def authenticated_nurse_client(api_client, nurse_user):
+def authenticated_nurse_client(nurse_user):
     """Return an API client authenticated as nurse."""
-    api_client.force_authenticate(user=nurse_user)
-    return api_client
+    client = APIClient()
+    client.force_authenticate(user=nurse_user)
+    return client
 
 
 @pytest.fixture
-def authenticated_lab_tech_client(api_client, lab_tech_user):
+def authenticated_lab_tech_client(lab_tech_user):
     """Return an API client authenticated as lab tech."""
-    api_client.force_authenticate(user=lab_tech_user)
-    return api_client
+    client = APIClient()
+    client.force_authenticate(user=lab_tech_user)
+    return client

@@ -223,7 +223,8 @@ class TestPatientAPI:
         )
         
         assert response.status_code == 400
-        assert 'ssn' in response.data
+        # Error may be in 'ssn' field or in 'errors.ssn' depending on exception handler
+        assert 'ssn' in response.data or ('errors' in response.data and 'ssn' in response.data['errors'])
 
 
 @pytest.mark.django_db

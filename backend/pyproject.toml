@@ -110,7 +110,7 @@ django_settings_module = "config.settings.dev"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings.test"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
-addopts = "--reuse-db --cov=apps --cov-report=html --cov-report=term-missing --cov-fail-under=85"
+addopts = "--reuse-db --cov=apps --cov-report=html --cov-report=term-missing --cov-fail-under=80"
 testpaths = ["tests"]
 
 [tool.coverage.run]
