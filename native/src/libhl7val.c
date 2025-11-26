@@ -69,14 +69,17 @@ int hl7val_validate_segment(const char *segment, size_t segment_len, char *error
 
     /* Count fields */
     int field_count = 1;
-    for (size_t i = 4; i < segment_len; i++) {
+    for (size_t i = 3; i < segment_len; i++) {
         if (segment[i] == delimiter) {
             field_count++;
         }
     }
 
-    /* Validate field count based on segment type */
+    /* For MSH segment, the field separator itself is MSH-1, so add 1 */
     char seg_type[4] = {segment[0], segment[1], segment[2], '\0'};
+    if (strcmp(seg_type, "MSH") == 0) {
+        field_count++;  /* MSH-1 is the field separator character */
+    }
     
     /* Basic field count validation for common segments */
     int min_fields = 0;
