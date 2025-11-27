@@ -15,7 +15,8 @@ env:
   PYTHON_VERSION: "3.13"
   DJANGO_SETTINGS_MODULE: config.settings.test
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  # Docker image names must be lowercase
+  IMAGE_NAME: manuel-igtm/hospital
 
 jobs:
   # ============================================

@@ -20,3 +20,6 @@ requests>=2.31.0
 
 # Async & Performance
 hiredis>=2.2.0
+
+# Logging
+python-json-logger>=2.0.0
