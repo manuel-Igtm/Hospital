@@ -38,12 +38,8 @@ class DashboardStatsView(APIView):
 
         # Patient statistics
         total_patients = Patient.objects.filter(is_active=True).count()
-        new_patients_month = Patient.objects.filter(
-            created_at__date__gte=start_of_month
-        ).count()
-        new_patients_week = Patient.objects.filter(
-            created_at__date__gte=start_of_week
-        ).count()
+        new_patients_month = Patient.objects.filter(created_at__date__gte=start_of_month).count()
+        new_patients_week = Patient.objects.filter(created_at__date__gte=start_of_week).count()
 
         # Lab order statistics
         total_lab_orders = LabOrder.objects.count()
@@ -54,21 +50,17 @@ class DashboardStatsView(APIView):
         ).count()
 
         # Revenue statistics
-        revenue_month = (
-            Payment.objects.filter(
-                status=PaymentStatus.COMPLETED,
-                created_at__date__gte=start_of_month,
-            ).aggregate(total=Sum("amount"))["total"]
-            or Decimal("0.00")
-        )
+        revenue_month = Payment.objects.filter(
+            status=PaymentStatus.COMPLETED,
+            created_at__date__gte=start_of_month,
+        ).aggregate(total=Sum("amount"))["total"] or Decimal("0.00")
 
-        revenue_today = (
-            Payment.objects.filter(
-                status=PaymentStatus.COMPLETED,
-                created_at__date=today,
-            ).aggregate(total=Sum("amount"))["total"]
-            or Decimal("0.00")
-        )
+        revenue_today = Payment.objects.filter(
+            status=PaymentStatus.COMPLETED,
+            created_at__date=today,
+        ).aggregate(
+            total=Sum("amount")
+        )["total"] or Decimal("0.00")
 
         # Invoice statistics
         pending_invoices = Invoice.objects.filter(
@@ -78,12 +70,9 @@ class DashboardStatsView(APIView):
             status__in=[InvoiceStatus.PENDING, InvoiceStatus.PARTIALLY_PAID],
             due_date__lt=today,
         ).count()
-        total_outstanding = (
-            Invoice.objects.filter(
-                status__in=[InvoiceStatus.PENDING, InvoiceStatus.PARTIALLY_PAID]
-            ).aggregate(total=Sum("balance_due"))["total"]
-            or Decimal("0.00")
-        )
+        total_outstanding = Invoice.objects.filter(
+            status__in=[InvoiceStatus.PENDING, InvoiceStatus.PARTIALLY_PAID]
+        ).aggregate(total=Sum("balance_due"))["total"] or Decimal("0.00")
 
         # Staff statistics
         total_staff = User.objects.filter(is_active=True).exclude(role=UserRole.ADMIN).count()
@@ -252,17 +241,11 @@ class PatientAnalyticsView(APIView):
         )
 
         # Gender distribution
-        gender_distribution = (
-            Patient.objects.filter(is_active=True)
-            .values("gender")
-            .annotate(count=Count("id"))
-        )
+        gender_distribution = Patient.objects.filter(is_active=True).values("gender").annotate(count=Count("id"))
 
         # Blood type distribution
         blood_type_distribution = (
-            Patient.objects.filter(is_active=True)
-            .values("blood_type")
-            .annotate(count=Count("id"))
+            Patient.objects.filter(is_active=True).values("blood_type").annotate(count=Count("id"))
         )
 
         # Age distribution
@@ -277,11 +260,7 @@ class PatientAnalyticsView(APIView):
 
         for patient in Patient.objects.filter(is_active=True).values("date_of_birth"):
             dob = patient["date_of_birth"]
-            age = (
-                today.year
-                - dob.year
-                - ((today.month, today.day) < (dob.month, dob.day))
-            )
+            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
             if age < 18:
                 age_ranges["0-17"] += 1
             elif age <= 30:
@@ -298,16 +277,10 @@ class PatientAnalyticsView(APIView):
                 "period_days": days,
                 "total_active": Patient.objects.filter(is_active=True).count(),
                 "new_patients_trend": [
-                    {"date": item["date"].isoformat(), "count": item["count"]}
-                    for item in new_patients_trend
+                    {"date": item["date"].isoformat(), "count": item["count"]} for item in new_patients_trend
                 ],
-                "gender_distribution": {
-                    item["gender"]: item["count"] for item in gender_distribution
-                },
-                "blood_type_distribution": {
-                    item["blood_type"]: item["count"]
-                    for item in blood_type_distribution
-                },
+                "gender_distribution": {item["gender"]: item["count"] for item in gender_distribution},
+                "blood_type_distribution": {item["blood_type"]: item["count"] for item in blood_type_distribution},
                 "age_distribution": age_ranges,
             }
         )
@@ -329,9 +302,7 @@ class LabAnalyticsView(APIView):
 
         # Orders by status
         orders_by_status = (
-            LabOrder.objects.filter(ordered_at__date__gte=start_date)
-            .values("status")
-            .annotate(count=Count("id"))
+            LabOrder.objects.filter(ordered_at__date__gte=start_date).values("status").annotate(count=Count("id"))
         )
 
         # Orders trend
@@ -364,25 +335,14 @@ class LabAnalyticsView(APIView):
                 total_turnaround += order.updated_at - order.ordered_at
                 completed_count += 1
 
-        avg_turnaround_hours = (
-            total_turnaround.total_seconds() / 3600 / completed_count
-            if completed_count > 0
-            else 0
-        )
+        avg_turnaround_hours = total_turnaround.total_seconds() / 3600 / completed_count if completed_count > 0 else 0
 
         return Response(
             {
                 "period_days": days,
-                "total_orders": LabOrder.objects.filter(
-                    ordered_at__date__gte=start_date
-                ).count(),
-                "orders_by_status": {
-                    item["status"]: item["count"] for item in orders_by_status
-                },
-                "orders_trend": [
-                    {"date": item["date"].isoformat(), "count": item["count"]}
-                    for item in orders_trend
-                ],
+                "total_orders": LabOrder.objects.filter(ordered_at__date__gte=start_date).count(),
+                "orders_by_status": {item["status"]: item["count"] for item in orders_by_status},
+                "orders_trend": [{"date": item["date"].isoformat(), "count": item["count"]} for item in orders_trend],
                 "top_test_types": [
                     {
                         "name": item["test_type__name"],
@@ -416,19 +376,13 @@ class OperationalMetricsView(APIView):
         today_patients = Patient.objects.filter(created_at__date=today).count()
         today_lab_orders = LabOrder.objects.filter(ordered_at__date=today).count()
         today_invoices = Invoice.objects.filter(created_at__date=today).count()
-        today_payments = Payment.objects.filter(
-            status=PaymentStatus.COMPLETED, created_at__date=today
-        ).count()
+        today_payments = Payment.objects.filter(status=PaymentStatus.COMPLETED, created_at__date=today).count()
 
         # Comparison with yesterday
         yesterday_patients = Patient.objects.filter(created_at__date=yesterday).count()
-        yesterday_lab_orders = LabOrder.objects.filter(
-            ordered_at__date=yesterday
-        ).count()
+        yesterday_lab_orders = LabOrder.objects.filter(ordered_at__date=yesterday).count()
         yesterday_invoices = Invoice.objects.filter(created_at__date=yesterday).count()
-        yesterday_payments = Payment.objects.filter(
-            status=PaymentStatus.COMPLETED, created_at__date=yesterday
-        ).count()
+        yesterday_payments = Payment.objects.filter(status=PaymentStatus.COMPLETED, created_at__date=yesterday).count()
 
         def calc_change(today_val, yesterday_val):
             if yesterday_val == 0:
@@ -436,36 +390,20 @@ class OperationalMetricsView(APIView):
             return round((today_val - yesterday_val) / yesterday_val * 100, 1)
 
         # Payment success rate
-        total_payment_attempts = Payment.objects.filter(
-            created_at__date__gte=last_month
-        ).count()
+        total_payment_attempts = Payment.objects.filter(created_at__date__gte=last_month).count()
         successful_payments = Payment.objects.filter(
             status=PaymentStatus.COMPLETED, created_at__date__gte=last_month
         ).count()
-        payment_success_rate = (
-            successful_payments / total_payment_attempts * 100
-            if total_payment_attempts > 0
-            else 0
-        )
+        payment_success_rate = successful_payments / total_payment_attempts * 100 if total_payment_attempts > 0 else 0
 
         # Collection rate
-        total_invoiced = (
-            Invoice.objects.filter(created_at__date__gte=last_month).aggregate(
-                total=Sum("total_amount")
-            )["total"]
-            or Decimal("0.00")
-        )
-        total_collected = (
-            Payment.objects.filter(
-                status=PaymentStatus.COMPLETED, created_at__date__gte=last_month
-            ).aggregate(total=Sum("amount"))["total"]
-            or Decimal("0.00")
-        )
-        collection_rate = (
-            float(total_collected) / float(total_invoiced) * 100
-            if total_invoiced > 0
-            else 0
-        )
+        total_invoiced = Invoice.objects.filter(created_at__date__gte=last_month).aggregate(total=Sum("total_amount"))[
+            "total"
+        ] or Decimal("0.00")
+        total_collected = Payment.objects.filter(
+            status=PaymentStatus.COMPLETED, created_at__date__gte=last_month
+        ).aggregate(total=Sum("amount"))["total"] or Decimal("0.00")
+        collection_rate = float(total_collected) / float(total_invoiced) * 100 if total_invoiced > 0 else 0
 
         return Response(
             {

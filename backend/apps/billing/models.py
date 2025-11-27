@@ -312,9 +312,7 @@ class Payment(models.Model):
     checkout_request_id = models.CharField(
         max_length=100, blank=True, db_index=True, help_text="M-Pesa CheckoutRequestID"
     )
-    mpesa_receipt_number = models.CharField(
-        max_length=50, blank=True, db_index=True, help_text="M-Pesa Receipt Number"
-    )
+    mpesa_receipt_number = models.CharField(max_length=50, blank=True, db_index=True, help_text="M-Pesa Receipt Number")
     transaction_date = models.DateTimeField(null=True, blank=True, help_text="M-Pesa Transaction Date")
 
     # Response data

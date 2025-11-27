@@ -152,10 +152,10 @@ class TestInvoiceEndpoints:
         test_invoice.status = InvoiceStatus.PENDING
         test_invoice.save()
         test_invoice.refresh_from_db()
-        
+
         url = reverse("invoice-cancel", kwargs={"pk": test_invoice.id})
         response = authenticated_admin_client.post(url)
-        
+
         assert response.status_code == status.HTTP_200_OK
         assert response.data["status"] == InvoiceStatus.CANCELLED
 

@@ -186,9 +186,7 @@ class TestSecurityEventEndpoints:
     def test_filter_events_by_type(self, authenticated_admin_client, security_events):
         """Test filtering events by type."""
         url = reverse("security-event-list")
-        response = authenticated_admin_client.get(
-            url, {"event_type": SecurityEvent.EventType.LOGIN_FAILED}
-        )
+        response = authenticated_admin_client.get(url, {"event_type": SecurityEvent.EventType.LOGIN_FAILED})
 
         assert response.status_code == status.HTTP_200_OK
         for event in response.data["results"]:

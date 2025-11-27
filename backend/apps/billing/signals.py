@@ -32,11 +32,9 @@ def log_payment_status_change(sender, instance, created, **kwargs):
         )
     elif instance.status == PaymentStatus.COMPLETED:
         logger.info(
-            f"Payment completed: {instance.id}, receipt: {instance.mpesa_receipt_number}, "
-            f"amount: {instance.amount}"
+            f"Payment completed: {instance.id}, receipt: {instance.mpesa_receipt_number}, " f"amount: {instance.amount}"
         )
     elif instance.status == PaymentStatus.FAILED:
         logger.warning(
-            f"Payment failed: {instance.id}, code: {instance.result_code}, "
-            f"reason: {instance.result_description}"
+            f"Payment failed: {instance.id}, code: {instance.result_code}, " f"reason: {instance.result_description}"
         )

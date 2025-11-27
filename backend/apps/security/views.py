@@ -218,12 +218,8 @@ class SecurityDashboardView(APIView):
 
         # Request statistics
         requests_24h = RequestLog.objects.filter(timestamp__gte=last_24h).count()
-        blocked_24h = RequestLog.objects.filter(
-            timestamp__gte=last_24h, blocked=True
-        ).count()
-        suspicious_24h = RequestLog.objects.filter(
-            timestamp__gte=last_24h, is_suspicious=True
-        ).count()
+        blocked_24h = RequestLog.objects.filter(timestamp__gte=last_24h, blocked=True).count()
+        suspicious_24h = RequestLog.objects.filter(timestamp__gte=last_24h, is_suspicious=True).count()
 
         # Top IPs today
         top_ips = (
@@ -245,9 +241,7 @@ class SecurityDashboardView(APIView):
         active_blocks = BlockedIP.objects.filter(is_active=True).count()
 
         # Rate limit violations
-        rate_limit_24h = RateLimitViolation.objects.filter(
-            timestamp__gte=last_24h
-        ).count()
+        rate_limit_24h = RateLimitViolation.objects.filter(timestamp__gte=last_24h).count()
 
         # Failed logins
         failed_logins_24h = SecurityEvent.objects.filter(

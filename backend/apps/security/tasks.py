@@ -161,22 +161,14 @@ def generate_security_report():
 
     # Gather statistics
     total_requests = RequestLog.objects.filter(timestamp__date=yesterday).count()
-    blocked_requests = RequestLog.objects.filter(
-        timestamp__date=yesterday, blocked=True
-    ).count()
-    suspicious_requests = RequestLog.objects.filter(
-        timestamp__date=yesterday, is_suspicious=True
-    ).count()
+    blocked_requests = RequestLog.objects.filter(timestamp__date=yesterday, blocked=True).count()
+    suspicious_requests = RequestLog.objects.filter(timestamp__date=yesterday, is_suspicious=True).count()
 
     security_events = (
-        SecurityEvent.objects.filter(timestamp__date=yesterday)
-        .values("event_type")
-        .annotate(count=Count("id"))
+        SecurityEvent.objects.filter(timestamp__date=yesterday).values("event_type").annotate(count=Count("id"))
     )
 
-    rate_limit_violations = RateLimitViolation.objects.filter(
-        timestamp__date=yesterday
-    ).count()
+    rate_limit_violations = RateLimitViolation.objects.filter(timestamp__date=yesterday).count()
 
     new_blocks = BlockedIP.objects.filter(blocked_at__date=yesterday).count()
 
