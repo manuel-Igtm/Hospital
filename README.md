@@ -460,9 +460,15 @@ Contributions are welcome! Please follow these steps:
 
 ---
 
-## �� License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- **[django-mpesa](https://github.com/AustinMusuya/django-mpesa)** by [Austin Musuya](https://github.com/AustinMusuya) - M-Pesa integration package that powers our mobile payment system
 
 ---
 
