@@ -11,8 +11,9 @@ import logging
 from datetime import datetime
 from typing import Any
 
-import requests
 from django.conf import settings
+
+import requests
 
 logger = logging.getLogger(__name__)
 

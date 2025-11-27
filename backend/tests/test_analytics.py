@@ -7,10 +7,12 @@ Copyright (c) 2025, Immanuel Njogu. All rights reserved.
 from datetime import date, timedelta
 from decimal import Decimal
 
-import pytest
 from django.urls import reverse
 from django.utils import timezone
+
 from rest_framework import status
+
+import pytest
 
 from apps.billing.models import Invoice, InvoiceItem, InvoiceStatus, Payment, PaymentMethod, PaymentStatus, Service
 from apps.lab_orders.models import LabOrder, TestType

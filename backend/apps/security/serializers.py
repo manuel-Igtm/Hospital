@@ -7,6 +7,7 @@ Copyright (c) 2025, Immanuel Njogu. All rights reserved.
 from datetime import timedelta
 
 from django.utils import timezone
+
 from rest_framework import serializers
 
 from .models import BlockedIP, RateLimitViolation, RequestLog, SecurityEvent

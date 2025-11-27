@@ -7,9 +7,10 @@ Copyright (c) 2025, Immanuel Njogu. All rights reserved.
 import logging
 from datetime import timedelta
 
-from celery import shared_task
 from django.conf import settings
 from django.utils import timezone
+
+from celery import shared_task
 
 logger = logging.getLogger(__name__)
 

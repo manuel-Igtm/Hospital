@@ -7,12 +7,14 @@ Copyright (c) 2025, Immanuel Njogu. All rights reserved.
 from datetime import timedelta
 from unittest.mock import patch
 
-import pytest
 from django.core.cache import cache
 from django.test import override_settings
 from django.urls import reverse
 from django.utils import timezone
+
 from rest_framework import status
+
+import pytest
 
 from apps.security.middleware import get_client_ip
 from apps.security.models import BlockedIP, RateLimitViolation, RequestLog, SecurityEvent

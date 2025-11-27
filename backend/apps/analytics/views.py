@@ -10,6 +10,7 @@ from decimal import Decimal
 from django.db.models import Avg, Count, Sum
 from django.db.models.functions import TruncDate, TruncMonth
 from django.utils import timezone
+
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response

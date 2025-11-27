@@ -91,7 +91,9 @@ line_length = 120
 skip_gitignore = true
 known_django = ["django"]
 known_drf = ["rest_framework"]
+known_first_party = ["apps", "config"]
 sections = ["FUTURE", "STDLIB", "DJANGO", "DRF", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+src_paths = ["backend"]
 
 [tool.mypy]
 python_version = "3.12"

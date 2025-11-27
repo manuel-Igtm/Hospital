@@ -8,9 +8,11 @@ from datetime import date, timedelta
 from decimal import Decimal
 from unittest.mock import MagicMock, patch
 
-import pytest
 from django.urls import reverse
+
 from rest_framework import status
+
+import pytest
 
 from apps.billing.models import (
     Invoice,
