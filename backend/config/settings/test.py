@@ -35,6 +35,22 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 CELERY_TASK_ALWAYS_EAGER = True
 CELERY_TASK_EAGER_PROPAGATES = True
 
+# Use local memory cache for tests instead of Redis
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+    }
+}
+
+# Disable security middleware in tests to avoid Redis dependency
+SECURITY_SETTINGS = {
+    "ENABLE_IP_TRACKING": False,
+    "ENABLE_IP_BLOCKING": False,
+    "AUTO_BLOCK_THRESHOLD": 100,
+    "REQUEST_LOG_RETENTION_DAYS": 30,
+}
+
 # Disable throttling in tests
 REST_FRAMEWORK["DEFAULT_THROTTLE_CLASSES"] = []
 

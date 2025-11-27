@@ -37,7 +37,7 @@ urlpatterns = [
     # Health checks
     path("health/", health_check, name="health"),
     path("ping/", ping, name="ping"),
-    # API v1 (MVP only: users, patients, lab_orders)
+    # API v1
     path(
         "api/v1/",
         include(
@@ -48,6 +48,12 @@ urlpatterns = [
                 path("", include("apps.patients.urls")),
                 # Lab Orders
                 path("lab/", include("apps.lab_orders.urls")),
+                # Billing & Payments
+                path("billing/", include("apps.billing.urls")),
+                # Analytics
+                path("analytics/", include("apps.analytics.urls")),
+                # Security
+                path("security/", include("apps.security.urls")),
             ]
         ),
     ),

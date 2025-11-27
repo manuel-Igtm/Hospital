@@ -8,3 +8,15 @@ django-filter>=23.5
 django-cors-headers>=4.3.0
 Pillow>=10.0.0
 cryptography>=42.0.0
+
+# Celery & Redis
+celery>=5.3.0
+django-celery-beat>=2.5.0
+redis>=5.0.0
+django-redis>=5.4.0
+
+# M-Pesa integration
+requests>=2.31.0
+
+# Async & Performance
+hiredis>=2.2.0

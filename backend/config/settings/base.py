@@ -51,11 +51,14 @@ INSTALLED_APPS = [
     "django_filters",
     "corsheaders",
     "drf_spectacular",
-    # Local apps (MVP only)
+    # Local apps
     "apps.core",
     "apps.users",
     "apps.patients",
     "apps.lab_orders",
+    "apps.billing",
+    "apps.analytics",
+    "apps.security",
 ]
 
 MIDDLEWARE = [
@@ -67,6 +70,11 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Custom security middleware
+    "apps.security.middleware.IPBlockingMiddleware",
+    "apps.security.middleware.RequestLoggingMiddleware",
+    "apps.security.middleware.RateLimitMiddleware",
+    "apps.security.middleware.SecurityHeadersMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -192,6 +200,9 @@ SPECTACULAR_SETTINGS = {
         {"name": "users", "description": "User management"},
         {"name": "patients", "description": "Patient management"},
         {"name": "lab-orders", "description": "Laboratory orders and results"},
+        {"name": "billing", "description": "Billing and M-Pesa payments"},
+        {"name": "analytics", "description": "Analytics and reporting"},
+        {"name": "security", "description": "Security and audit logs"},
     ],
 }
 
@@ -204,6 +215,40 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 minutes
+CELERY_BEAT_SCHEDULE = {
+    "cleanup-old-request-logs": {
+        "task": "apps.security.tasks.cleanup_old_request_logs",
+        "schedule": 86400,  # Daily
+    },
+    "check-overdue-invoices": {
+        "task": "apps.billing.tasks.check_overdue_invoices",
+        "schedule": 3600,  # Hourly
+    },
+}
+
+# Redis Cache Configuration
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": env("REDIS_URL", default="redis://localhost:6379/1"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        "KEY_PREFIX": "hospital",
+    }
+}
+
+# M-Pesa Configuration
+MPESA_CONSUMER_KEY = env("MPESA_CONSUMER_KEY", default="")
+MPESA_CONSUMER_SECRET = env("MPESA_CONSUMER_SECRET", default="")
+MPESA_SHORTCODE = env("MPESA_SHORTCODE", default="174379")  # Sandbox default
+MPESA_PASSKEY = env("MPESA_PASSKEY", default="")
+MPESA_CALLBACK_URL = env("MPESA_CALLBACK_URL", default="")
+MPESA_ENVIRONMENT = env("MPESA_ENVIRONMENT", default="sandbox")  # sandbox or production
+
+# Security Settings
+SECURITY_LOG_REQUESTS = env.bool("SECURITY_LOG_REQUESTS", default=True)
+SECURITY_REQUEST_LOG_RETENTION_DAYS = env.int("SECURITY_REQUEST_LOG_RETENTION_DAYS", default=90)
 
 # Logging
 LOGGING = {
