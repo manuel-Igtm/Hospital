@@ -57,16 +57,21 @@ urlpatterns = [
             ]
         ),
     ),
-    # API Documentation
-    path("api/v1/schema/", SpectacularAPIView.as_view(), name="schema"),
-    path("api/v1/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
-    path("api/v1/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
+    # API Documentation (root-level, not versioned)
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+    path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
 ]
 
 # Serve media files in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+    # DRF browsable API login/logout
+    urlpatterns += [
+        path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    ]
 
     # Debug toolbar
     if "debug_toolbar" in settings.INSTALLED_APPS:

@@ -28,11 +28,12 @@ def get_client_ip(request):
 def log_login_success(sender, request, user, **kwargs):
     """Log successful login."""
     ip = get_client_ip(request)
-    logger.info(f"User {user.username} logged in from {ip}")
+    user_identifier = getattr(user, "email", str(user))
+    logger.info(f"User {user_identifier} logged in from {ip}")
 
     SecurityEvent.objects.create(
         event_type=SecurityEvent.EventType.LOGIN_SUCCESS,
-        description=f"User {user.username} logged in successfully",
+        description=f"User {user_identifier} logged in successfully",
         ip_address=ip,
         user=user,
         severity=SecurityEvent.Severity.LOW,
@@ -46,11 +47,12 @@ def log_logout(sender, request, user, **kwargs):
         return
 
     ip = get_client_ip(request)
-    logger.info(f"User {user.username} logged out from {ip}")
+    user_identifier = getattr(user, "email", str(user))
+    logger.info(f"User {user_identifier} logged out from {ip}")
 
     SecurityEvent.objects.create(
         event_type=SecurityEvent.EventType.LOGOUT,
-        description=f"User {user.username} logged out",
+        description=f"User {user_identifier} logged out",
         ip_address=ip,
         user=user,
         severity=SecurityEvent.Severity.LOW,
