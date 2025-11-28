@@ -13,7 +13,7 @@ All endpoints (except registration and login) require JWT authentication.
 
 ### Headers
 
-```
+```text
 Authorization: Bearer <access_token>
 Content-Type: application/json
 ```
@@ -36,6 +36,7 @@ POST /api/v1/auth/register/
 ```
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com",
@@ -50,6 +51,7 @@ POST /api/v1/auth/register/
 **Roles:** `admin`, `doctor`, `nurse`, `lab_technician`
 
 **Response (201 Created):**
+
 ```json
 {
   "id": "uuid",
@@ -70,6 +72,7 @@ POST /api/v1/auth/login/
 ```
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com",
@@ -78,6 +81,7 @@ POST /api/v1/auth/login/
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
@@ -101,6 +105,7 @@ POST /api/v1/auth/refresh/
 ```
 
 **Request Body:**
+
 ```json
 {
   "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
@@ -108,6 +113,7 @@ POST /api/v1/auth/refresh/
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
@@ -123,6 +129,7 @@ POST /api/v1/auth/logout/
 ```
 
 **Request Body:**
+
 ```json
 {
   "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
@@ -140,6 +147,7 @@ GET /api/v1/auth/me/
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "id": "uuid",
@@ -163,6 +171,7 @@ GET /api/v1/patients/
 ```
 
 **Query Parameters:**
+
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `page` | int | Page number (default: 1) |
@@ -171,6 +180,7 @@ GET /api/v1/patients/
 | `ordering` | string | Sort field (`created_at`, `-created_at`, `last_name`) |
 
 **Response (200 OK):**
+
 ```json
 {
   "count": 150,
@@ -201,6 +211,7 @@ POST /api/v1/patients/
 ```
 
 **Request Body:**
+
 ```json
 {
   "first_name": "Jane",
@@ -225,6 +236,7 @@ POST /api/v1/patients/
 ```
 
 **Response (201 Created):**
+
 ```json
 {
   "id": "uuid",
@@ -251,6 +263,7 @@ GET /api/v1/patients/{id}/
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "id": "uuid",
@@ -313,6 +326,7 @@ GET /api/v1/patients/{id}/history/
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "patient_id": "uuid",
@@ -343,6 +357,7 @@ GET /api/v1/lab-orders/
 ```
 
 **Query Parameters:**
+
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `page` | int | Page number |
@@ -353,6 +368,7 @@ GET /api/v1/lab-orders/
 **Status Values:** `pending`, `in_progress`, `completed`, `cancelled`
 
 **Response (200 OK):**
+
 ```json
 {
   "count": 50,
@@ -388,6 +404,7 @@ POST /api/v1/lab-orders/
 ```
 
 **Request Body:**
+
 ```json
 {
   "patient_id": "uuid",
@@ -403,6 +420,7 @@ POST /api/v1/lab-orders/
 **Priority:** `stat`, `urgent`, `routine`
 
 **Response (201 Created):**
+
 ```json
 {
   "id": "uuid",
@@ -426,6 +444,7 @@ GET /api/v1/lab-orders/{id}/
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "id": "uuid",
@@ -457,6 +476,7 @@ PATCH /api/v1/lab-orders/{id}/
 ```
 
 **Request Body:**
+
 ```json
 {
   "status": "completed",
